@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding= "UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="entity.GameUser" table="gameuser">
+        <id name="qqAcc" column="qqAcc">
+            <generator class="assigned"></generator>
+        </id>
+        <property name="goldCoin" column="goldCoin" not-null="true"></property>
+        <property name="copperCoin" column="copperCoin" not-null="true"></property>
+        <property name="recentDate" column="recentDate"></property>
+    </class>
+</hibernate-mapping>
