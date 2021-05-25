@@ -17,7 +17,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Restrictions;
 
 public class Test {
-    public static final String version = "0.1.5";
+    public static final String version = "0.1.6 分条发送 基本数据结构";
     public static void main(String[] args){
         acceptRequset();
         //MyTest();

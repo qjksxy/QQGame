@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding= "UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="entity.Card" table="card">
+        <id name="cardId" column="cardId">
+            <generator class="native"></generator>
+        </id>
+        <property name="userAcc" column="userAcc" not-null="true"></property>
+        <property name="heroId" column="heroId" not-null="true"></property>
+        <property name="count" column="count" not-null="true"></property>
+        <property name="level" column="level" not-null="true"></property>
+    </class>
+</hibernate-mapping>

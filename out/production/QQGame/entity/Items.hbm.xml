@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding= "UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="entity.Items" table="items">
+        <id name="itemsId" column="itemsId">
+            <generator class="assigned"></generator>
+        </id>
+        <property name="userAcc" column="userAcc" not-null="true"></property>
+        <property name="itemName" column="itemName" not-null="true"></property>
+        <property name="itemNum" column="itemNum" not-null="true"></property>
+        <property name="extra" column="extra" not-null="false"></property>
+        <property name="desc" column="desc" not-null="false"></property>
+    </class>
+</hibernate-mapping>
