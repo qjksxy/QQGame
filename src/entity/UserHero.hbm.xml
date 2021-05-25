@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding= "UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="entity.UserHero" table="userhero">
+        <id name="id" column="id">
+            <generator class="native"></generator>
+        </id>
+        <property name="types" column="types" not-null="true"></property>
+        <property name="maxhp" column="maxhp" not-null="true"></property>
+        <property name="maxmp" column="maxmp" not-null="true"></property>
+        <property name="phyatt" column="phyatt" not-null="true"></property>
+        <property name="phydef" column="phydef" not-null="true"></property>
+        <property name="magatt" column="magatt" not-null="true"></property>
+        <property name="magdef" column="magdef" not-null="true"></property>
+        <property name="acc" column="acc" not-null="true"></property>
+        <property name="miss" column="miss" not-null="true"></property>
+        <property name="crit" column="crit" not-null="true"></property>
+        <property name="speed" column="speed" not-null="true"></property>
+        <property name="userAcc" column="userAcc" not-null="true"></property>
+        <property name="level" column="level" not-null="true"></property>
+        <property name="exp" column="exp" not-null="true"></property>
+    </class>
+</hibernate-mapping>
