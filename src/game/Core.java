@@ -60,7 +60,7 @@ public class Core {
             try {
                 String[] announce = FileOperation.readFile("/home/temp/QQGame/announce", 2);
                 for(String ann : announce){
-                    returnMsg += "\n-----";
+                    returnMsg += "&";
                     String[] anns = ann.split(" ");
                     for(String str : anns){
                         returnMsg += "\n"+str;
