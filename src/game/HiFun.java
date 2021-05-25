@@ -36,6 +36,26 @@ public class HiFun {
         session.saveOrUpdate(gu);
     }
 
+    public Card findCard(String qqAcc, int heroId){
+        Criteria criteria = session.createCriteria(Card.class);
+        criteria.add(Restrictions.eq("userAcc", qqAcc));
+        criteria.add(Restrictions.eq("heroId", heroId));
+        List<Card> list = criteria.list();
+        if(list.isEmpty()){
+            return null;
+        }else{
+            return list.get(0);
+        }
+    }
+
+    public void saveCard(Card card){
+        session.save(card);
+    }
+
+    public void updateCard(Card card){
+        session.saveOrUpdate(card);
+    }
+
     public void close(){
         tx.commit();
         session.close();

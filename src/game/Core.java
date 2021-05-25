@@ -12,7 +12,9 @@ import java.util.Random;
 
 public class Core {
     public static String core(String msg){
-
+        if(Test.status == 1){
+            return "程序崩溃，快呼叫菜鸡学者";
+        }
         System.out.println("---"+new Date().toString()+"\nclient:\n" + msg);
         String[] msgs = msg.split(" ");
         String QQAccount = msgs[0];
@@ -72,14 +74,14 @@ public class Core {
             }
         }else if(msgs[1].equals("抽卡")){
             if(msgs.length == 2){
-                returnMsg = LuckyDraw.luckyDraw(10);
+                returnMsg = LuckyDraw.luckyDraw(gu, 10);
             }else{
                 try{
                     int luckyNum = Integer.parseInt(msgs[2]);
                     if(luckyNum>30){
                         returnMsg = "抽卡无保底，梭哈需谨慎，单次最多连续抽卡30次";
                     }else{
-                        returnMsg = LuckyDraw.luckyDraw(luckyNum);
+                        returnMsg = LuckyDraw.luckyDraw(gu, luckyNum);
                     }
                 }catch (Exception e){
                     returnMsg = "抽卡次数错误！\n"+msgs.length+":"+e.toString();

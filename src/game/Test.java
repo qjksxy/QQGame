@@ -1,5 +1,6 @@
 package game;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -15,10 +16,29 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Restrictions;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 public class Test {
+    public static int status = 0;
     public static final String version = "0.1.6 分条发送 基本数据结构";
     public static void main(String[] args){
+        try {
+            Hero.readHero();
+        } catch (ParserConfigurationException e) {
+            status = 1;
+            System.out.println(e.toString());
+            e.printStackTrace();
+        } catch (IOException e) {
+            status = 1;
+            System.out.println(e.toString());
+            e.printStackTrace();
+        } catch (SAXException e) {
+            status = 1;
+            System.out.println(e.toString());
+            e.printStackTrace();
+        }
         acceptRequset();
         //MyTest();
     }
