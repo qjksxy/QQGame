@@ -22,7 +22,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 public class Test {
     public static int status = 0;
-    public static final String version = "0.1.6 分条发送 基本数据结构";
+    public static final String version = "0.2 抽卡完成";
     public static void main(String[] args){
         try {
             Hero.readHero();

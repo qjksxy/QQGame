@@ -48,6 +48,13 @@ public class HiFun {
         }
     }
 
+    public List<Card> findAllCard(String qqAcc){
+        Criteria criteria = session.createCriteria(Card.class);
+        criteria.add(Restrictions.eq("userAcc", qqAcc));
+        List<Card> list = criteria.list();
+        return list;
+    }
+
     public void saveCard(Card card){
         session.save(card);
     }

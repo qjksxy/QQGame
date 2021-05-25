@@ -5,7 +5,7 @@
 <hibernate-mapping>
     <class name="entity.Items" table="items">
         <id name="itemsId" column="itemsId">
-            <generator class="assigned"></generator>
+            <generator class="native"></generator>
         </id>
         <property name="userAcc" column="userAcc" not-null="true"></property>
         <property name="itemName" column="itemName" not-null="true"></property>

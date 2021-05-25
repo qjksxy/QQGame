@@ -1,5 +1,6 @@
 package game;
 
+import entity.Card;
 import entity.GameUser;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -7,6 +8,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -74,14 +76,24 @@ public class Core {
             }
         }else if(msgs[1].equals("抽卡")){
             if(msgs.length == 2){
+                if(gu.getGoldCoin() < 100){
+                    return "当前金币数量不足，每次抽卡需10金币，您当前剩余金币"+gu.getGoldCoin();
+                }
                 returnMsg = LuckyDraw.luckyDraw(gu, 10);
+                gu.setGoldCoin(gu.getGoldCoin() - 100);
+                hf.updateUser(gu);
             }else{
                 try{
                     int luckyNum = Integer.parseInt(msgs[2]);
                     if(luckyNum>30){
                         returnMsg = "抽卡无保底，梭哈需谨慎，单次最多连续抽卡30次";
                     }else{
+                        if(gu.getGoldCoin() < 10*luckyNum){
+                            return "当前金币数量不足，每次抽卡需10金币，您当前剩余金币"+gu.getGoldCoin();
+                        }
                         returnMsg = LuckyDraw.luckyDraw(gu, luckyNum);
+                        gu.setGoldCoin(gu.getGoldCoin() - 10*luckyNum);
+                        hf.updateUser(gu);
                     }
                 }catch (Exception e){
                     returnMsg = "抽卡次数错误！\n"+msgs.length+":"+e.toString();
@@ -130,12 +142,31 @@ public class Core {
                     return e.toString();
                 }
             }
+        }else if(msgs[1].equals("碎片")){
+            returnMsg = seeCards(gu);
         }
         else {
             returnMsg = "操作参数错误！\n请选择操作：\n签到\n抽卡 [次数]\n物品";
         }
         System.out.println("---"+new Date().toString()+"\nserver:\n" + returnMsg+"\n---");
         hf.close();
+        return returnMsg;
+    }
+
+    public static String seeCards(GameUser gu){
+        String returnMsg = "";
+        HiFun hf = new HiFun();
+        List<Card> cards = hf.findAllCard(gu.getQqAcc());
+        int i = 0;
+        for(Card card : cards){
+            returnMsg += "\n"+Hero.getHeroName(card.getHeroId())+"碎片数量："+card.getCount();
+            returnMsg += "\n"+"星级："+card.getLevel();
+            i++;
+            if(i==4){
+                returnMsg+="&";
+                i = 0;
+            }
+        }
         return returnMsg;
     }
 }

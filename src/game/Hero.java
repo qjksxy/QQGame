@@ -107,4 +107,17 @@ public class Hero {
         }
         return null;
     }
+
+    public static String getHeroName(Hero hero){
+        String heroName = hero.grade+":"+hero.name;
+        if(!hero.title.equals("")){
+            heroName = heroName+"["+hero.title+"]";
+        }
+        return heroName;
+    }
+
+    public static String getHeroName(int heroId){
+        Hero hero = findHeroByID(heroId);
+        return getHeroName(hero);
+    }
 }

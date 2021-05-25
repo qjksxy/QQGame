@@ -9,17 +9,13 @@ public class LuckyDraw {
     private static Random random = null;
     public static String luckyDraw(GameUser gu, int num){
         int[] card = new int[10];
-        int[] heroPot = {1, 1, 1, 2, 2, 2, 3, 3, 3, 3};
+        int[] heroPot = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         String[] heroName = new String[10];
         for(int i=0; i<10; i++){
             Hero hero = Hero.findHeroByID(heroPot[i]);
             if(hero!=null){
-                heroName[i] = hero.name;
-                if(!hero.title.equals("")){
-                    heroName[i] += "["+hero.title+"]";
-                }
+                heroName[i] = Hero.getHeroName(hero);
             }
-
         }
         random = new Random();
         String res = "";
@@ -74,17 +70,17 @@ public class LuckyDraw {
                 card[5]+=10;
                 res += "\n"+heroName[5]+"碎片*10";
             }else if(rand < 71){
-                card[6]++;
-                res += "\n"+heroName[6]+"碎片*1";
+                card[6]+=2;
+                res += "\n"+heroName[6]+"碎片*2";
             }else if(rand < 81){
-                card[7]++;
-                res += "\n"+heroName[7]+"碎片*1";
+                card[7]+=2;
+                res += "\n"+heroName[7]+"碎片*2";
             }else if(rand < 91){
-                card[8]++;
-                res += "\n"+heroName[8]+"碎片*1";
+                card[8]+=2;
+                res += "\n"+heroName[8]+"碎片*2";
             }else if(rand < 101){
-                card[9]++;
-                res += "\n"+heroName[9]+"碎片*1";
+                card[9]+=2;
+                res += "\n"+heroName[9]+"碎片*2";
             }
         }
         for(int i=0; i<10; i++){
@@ -104,7 +100,6 @@ public class LuckyDraw {
                     hiFun.saveCard(card1);
                     hiFun.close();
                 }
-
             }
         }
         return res;
