@@ -18,6 +18,9 @@ public class SocketThread extends Thread{
             int msgLen = dataInputStream.read(b);
             String clientMsg = new String(b, 0, msgLen);
             String serverMsg = Core.core(clientMsg);
+            if(serverMsg.equals("")){
+                serverMsg = "server：noinformation to response.";
+            }
             OutputStream outputStream = socket.getOutputStream();
             DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
             dataOutputStream.writeUTF(serverMsg);

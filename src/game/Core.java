@@ -40,108 +40,17 @@ public class Core {
             gu = list.get(0);
         }
         if(msgs.length == 1){
-            return "请选择操作：\n签到\n抽卡 [次数]";
-        }
-        if(msgs[1].equals("签到")){
-            if(gu.getRecentDate() == null){
-                gu.setRecentDate(new Date());
-                gu.setGoldCoin(gu.getGoldCoin()+50);
-                hf.updateUser(gu);
-                returnMsg = QQAccount+":\n签到成功，金币+50！";
-            }else{
-                Date nowDate = new Date();
-                if(gu.getRecentDate().getDate() == nowDate.getDate()
-                && gu.getRecentDate().getMonth() == nowDate.getMonth()
-                && gu.getRecentDate().getDay() == nowDate.getDay()){
-                    returnMsg = QQAccount+":\n今天已经签到了哦，请勿重复签到";
-                }else{
-                    gu.setRecentDate(new Date());
-                    gu.setGoldCoin(gu.getGoldCoin()+50);
-                    hf.updateUser(gu);
-                    returnMsg = QQAccount+":\n签到成功，金币+50！";
-                }
-            }
-            try {
-                String[] announce = FileOperation.readFile("/home/temp/QQGame/announce", 2);
-                for(String ann : announce){
-                    returnMsg += "&";
-                    String[] anns = ann.split(" ");
-                    for(String str : anns){
-                        returnMsg += "\n"+str;
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                returnMsg += "\n公告获取失败！";
-            }
+            return "请选择操作：\n"+help();
+        }else if(msgs[1].equals("签到")){
+            returnMsg = sign(msgs, gu, hf, QQAccount);
+        }else if(msgs[1].equals("版本")){
+            returnMsg = Test.version;
         }else if(msgs[1].equals("抽卡")){
-            if(msgs.length == 2){
-                if(gu.getGoldCoin() < 100){
-                    return "当前金币数量不足，每次抽卡需10金币，您当前剩余金币"+gu.getGoldCoin();
-                }
-                returnMsg = LuckyDraw.luckyDraw(gu, 10);
-                gu.setGoldCoin(gu.getGoldCoin() - 100);
-                hf.updateUser(gu);
-            }else{
-                try{
-                    int luckyNum = Integer.parseInt(msgs[2]);
-                    if(luckyNum>30){
-                        returnMsg = "抽卡无保底，梭哈需谨慎，单次最多连续抽卡30次";
-                    }else{
-                        if(gu.getGoldCoin() < 10*luckyNum){
-                            return "当前金币数量不足，每次抽卡需10金币，您当前剩余金币"+gu.getGoldCoin();
-                        }
-                        returnMsg = LuckyDraw.luckyDraw(gu, luckyNum);
-                        gu.setGoldCoin(gu.getGoldCoin() - 10*luckyNum);
-                        hf.updateUser(gu);
-                    }
-                }catch (Exception e){
-                    returnMsg = "抽卡次数错误！\n"+msgs.length+":"+e.toString();
-                }
-            }
+            returnMsg = draw(msgs, gu, hf);
         }else if(msgs[1].equals("物品")) {
-            returnMsg = gu.getQqAcc()+":\n金币数量："+gu.getGoldCoin()+"\n铜币数量："+gu.getCopperCoin();
+            returnMsg = seeItems(gu);
         }else if(msgs[1].equals("帮助") || msgs[1].equals("help")){
-            returnMsg = "签到\n抽卡 [次数]\n物品\n帮助";
-        }else if(msgs[1].equals("测试")){
-            if(msgs.length>2){
-                try{
-                    int len = Integer.parseInt(msgs[2]);
-                    for(int i=0; i<len; i++){
-                        returnMsg+="口";
-                    }
-                }catch (Exception e){
-                    return e.toString();
-                }
-
-
-            }
-        } else if(msgs[1].equals("测试2")){
-            if(msgs.length>2){
-                String[] teststr = {"1", "\n", "<", "口", "A", "a", " "};
-                Random random = new Random();
-                try{
-                    int len = Integer.parseInt(msgs[2]);
-                    for(int i=0; i<len; i++){
-                        returnMsg+=teststr[random.nextInt(teststr.length)];
-                    }
-                }catch (Exception e){
-                    return e.toString();
-                }
-            }
-        }else if(msgs[1].equals("测试3")){
-            if(msgs.length>2){
-                String[] teststr = {"\n", "A", "a"};
-                Random random = new Random();
-                try{
-                    int len = Integer.parseInt(msgs[2]);
-                    for(int i=0; i<len; i++){
-                        returnMsg+=teststr[random.nextInt(teststr.length)];
-                    }
-                }catch (Exception e){
-                    return e.toString();
-                }
-            }
+            returnMsg = help();
         }else if(msgs[1].equals("碎片")){
             returnMsg = seeCards(gu);
         }
@@ -153,7 +62,7 @@ public class Core {
         return returnMsg;
     }
 
-    public static String seeCards(GameUser gu){
+    private static String seeCards(GameUser gu){
         String returnMsg = "";
         HiFun hf = new HiFun();
         List<Card> cards = hf.findAllCard(gu.getQqAcc());
@@ -168,5 +77,84 @@ public class Core {
             }
         }
         return returnMsg;
+    }
+
+    private static String sign(String[] msgs, GameUser gu, HiFun hf, String QQAccount){
+        String returnMsg = "";
+        if(gu.getRecentDate() == null){
+            gu.setRecentDate(new Date());
+            gu.setGoldCoin(gu.getGoldCoin()+50);
+            hf.updateUser(gu);
+            returnMsg = QQAccount+":\n签到成功，金币+50！";
+        }else{
+            Date nowDate = new Date();
+            if(gu.getRecentDate().getDate() == nowDate.getDate()
+                    && gu.getRecentDate().getMonth() == nowDate.getMonth()
+                    && gu.getRecentDate().getDay() == nowDate.getDay()){
+                returnMsg = QQAccount+":\n今天已经签到了哦，请勿重复签到";
+            }else{
+                gu.setRecentDate(new Date());
+                gu.setGoldCoin(gu.getGoldCoin()+50);
+                hf.updateUser(gu);
+                returnMsg = QQAccount+":\n签到成功，金币+50！";
+            }
+        }
+        try {
+            String[] announce = FileOperation.readFile("/home/temp/QQGame/announce", 2);
+            for(String ann : announce){
+                returnMsg += "&";
+                String[] anns = ann.split(" ");
+                for(String str : anns){
+                    returnMsg += "\n"+str;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            returnMsg += "\n公告获取失败！";
+        }
+        return returnMsg;
+    }
+
+    private static String help(){
+        String msg = "帮助\n"+
+                "版本\n"+
+                "签到\n"+
+                "物品\n"+
+                "碎片\n"+
+                "抽卡 [次数，默认为10]";
+        return msg;
+    }
+
+    private static String draw(String[] msgs, GameUser gu, HiFun hf){
+        String returnMsg = "";
+        if(msgs.length == 2){
+            if(gu.getGoldCoin() < 100){
+                return "当前金币数量不足，每次抽卡需10金币，您当前剩余金币"+gu.getGoldCoin();
+            }
+            returnMsg = LuckyDraw.luckyDraw(gu, 10);
+            gu.setGoldCoin(gu.getGoldCoin() - 100);
+            hf.updateUser(gu);
+        }else{
+            try{
+                int luckyNum = Integer.parseInt(msgs[2]);
+                if(luckyNum>30){
+                    returnMsg = "抽卡无保底，梭哈需谨慎，单次最多连续抽卡30次";
+                }else{
+                    if(gu.getGoldCoin() < 10*luckyNum){
+                        return "当前金币数量不足，每次抽卡需10金币，您当前剩余金币"+gu.getGoldCoin();
+                    }
+                    returnMsg = LuckyDraw.luckyDraw(gu, luckyNum);
+                    gu.setGoldCoin(gu.getGoldCoin() - 10*luckyNum);
+                    hf.updateUser(gu);
+                }
+            }catch (Exception e){
+                returnMsg = "抽卡次数错误！\n"+msgs.length+":"+e.toString();
+            }
+        }
+        return returnMsg;
+    }
+
+    private static String seeItems(GameUser gu){
+        return gu.getQqAcc()+":\n金币数量："+gu.getGoldCoin()+"\n铜币数量："+gu.getCopperCoin();
     }
 }

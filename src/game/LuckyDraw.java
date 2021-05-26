@@ -7,20 +7,27 @@ import java.util.Random;
 
 public class LuckyDraw {
     private static Random random = null;
-    public static String luckyDraw(GameUser gu, int num){
-        int[] card = new int[10];
-        int[] heroPot = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-        String[] heroName = new String[10];
+    private static int[] card;
+    private static int[] heroPot;
+    private static String[] heroName;
+    static {
+        card = new int[10];
+        heroPot = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        heroName = new String[10];
         for(int i=0; i<10; i++){
             Hero hero = Hero.findHeroByID(heroPot[i]);
             if(hero!=null){
                 heroName[i] = Hero.getHeroName(hero);
             }
         }
+    }
+
+    public static String luckyDraw(GameUser gu, int num){
+
         random = new Random();
         String res = "";
         for(int i=0; i<num; i++){
-            if(i==10 || i==20){
+            if(i%5==0 && i!=0){
                 res += "&";
             }
             int rand = random.nextInt(100)+1;
@@ -88,6 +95,7 @@ public class LuckyDraw {
                 HiFun hiFun = new HiFun();
                 Card card1 = hiFun.findCard(gu.getQqAcc(), heroPot[i]);
                 if(card1!=null){
+                    System.out.println(i+":"+card1.getCount()+"+"+card[i]);
                     card1.setCount(card1.getCount()+card[i]);
                     hiFun.updateCard(card1);
                     hiFun.close();
