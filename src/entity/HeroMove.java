@@ -4,6 +4,7 @@ public class HeroMove {
     private int id;
     private int userHeroId;
     private int moveId;
+    //是 -- 1   否 -- 0
     private int isSelected;
     private String extraInfo;
 

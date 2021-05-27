@@ -26,7 +26,7 @@ public class Core {
         GameUser gu;
         HiFun hf = new HiFun();
         try{
-            long QQAcc = Long.parseLong(QQAccount);
+            Long.parseLong(QQAccount);
         }catch (Exception e){
             returnMsg = "QQ账号错误！\n"+e.toString();
             return returnMsg;
@@ -108,10 +108,11 @@ public class Core {
     private static String synthetic(GameUser gu){
         String returnMsg = "";
         HiFun hf = new HiFun();
+        //获取用户全部碎片
         List<Card> cards = hf.findAllCard(gu.getQqAcc());
         int i = 0;
         for(Card card : cards){
-            int type = card.getCardId()%10;
+            int type = card.getHeroId()%10;
             int temp;
             if(type==1){
                 temp = 20;
@@ -127,6 +128,7 @@ public class Core {
                 if(nowCardLevel>5){
                     nowCardLevel = 5;
                 }
+                //获得新卡
                 if(card.getLevel()==0){
                     returnMsg += "\n成功获得"+nowCardLevel+"星"+Hero.getHeroName(card.getHeroId());
                     UserHero userHero = new UserHero(Hero.findHeroByID(card.getHeroId()), nowCardLevel, gu.getQqAcc());
@@ -134,6 +136,7 @@ public class Core {
                     hf.updateCard(card);
                     hf.saveUserHero(userHero);
                 }else{
+                    //已有卡升星
                     int priIncreate = nowCardLevel - card.getLevel();
                     returnMsg += "\n"+Hero.getHeroName(card.getHeroId())+card.getLevel()+"星->"+nowCardLevel+"星";
                     card.setLevel(nowCardLevel);

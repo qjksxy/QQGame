@@ -1,10 +1,16 @@
 package entity;
 
+import fight.Move;
 import game.Hero;
+import game.HiFun;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
+import java.util.jar.JarEntry;
 
 public class UserHero {
+    private List<Move> moveList;
     private int id;
     private int heroId;
     private int types;
@@ -226,8 +232,25 @@ public class UserHero {
         userHero.magdef = ((hero.stumagdef*2+hero.basmagdef/4+userHero.priattdef*5)*userHero.level/100+5);
         userHero.acc = ((hero.stuacc*2+hero.basacc/4+userHero.prioth*5)*userHero.level/100+5);
         userHero.miss = ((hero.stumiss*2+hero.basmiss/4+userHero.prioth*5)*userHero.level/100+5);
-        userHero.crit = ((hero.stucrit*2+hero.bascrit/4+userHero.prioth*5)*userHero.level/100+5);
+        userHero.crit = hero.stucrit+hero.bascrit;
         userHero.speed = ((hero.stuspeed*2+hero.basspeed/4+userHero.prioth*5)*userHero.level/100+5);
         return userHero;
+    }
+
+    public void getMove(){
+        HiFun hiFun = new HiFun();
+        List<HeroMove> heroMoveList = hiFun.findHeroMove(this.id, false);
+        List<Move> tmoves = new LinkedList<>();
+        for(HeroMove heroMove : heroMoveList){
+            Move move = Move.getMoveById(heroMove.getMoveId());
+            tmoves.add(move);
+        }
+        moveList = tmoves;
+    }
+
+    public static String studyMove(){
+        String str = "";
+
+        return str;
     }
 }

@@ -1,5 +1,6 @@
 package game;
 import entity.*;
+import fight.Move;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -78,6 +79,16 @@ public class HiFun {
             criteria.add(Restrictions.eq("heroId", heroId));
         }
         List<UserHero> list = criteria.list();
+        return list;
+    }
+
+    public List<HeroMove> findHeroMove(int userHeroId, boolean isSelectedOnly){
+        Criteria criteria = session.createCriteria(HeroMove.class);
+        criteria.add(Restrictions.eq("userHeroId", userHeroId));
+        if(isSelectedOnly){
+            criteria.add(Restrictions.eq("isSelected", 1));
+        }
+        List<HeroMove> list = criteria.list();
         return list;
     }
 

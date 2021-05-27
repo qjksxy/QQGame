@@ -1,7 +1,7 @@
 package res;
 
 public class Text {
-    public static final String version = "0.2.1 合成完成";
+    public static final String version = "0.2.3 苦逼";
     public static final String help = "版本\n"+
             "帮助\n"+
             "签到\n"+

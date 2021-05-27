@@ -26,15 +26,8 @@ public class Test {
     public static void main(String[] args){
         try {
             Hero.readHero();
-        } catch (ParserConfigurationException e) {
-            status = 1;
-            System.out.println(e.toString());
-            e.printStackTrace();
-        } catch (IOException e) {
-            status = 1;
-            System.out.println(e.toString());
-            e.printStackTrace();
-        } catch (SAXException e) {
+            //FileOperation.readMove();
+        } catch (Exception e) {
             status = 1;
             System.out.println(e.toString());
             e.printStackTrace();
@@ -49,7 +42,6 @@ public class Test {
         ServerSocket serverSocket = null;
 
         for(int i=0; i<1000; i++){
-            System.out.println(i + "次循环");
             try{
                 serverSocket = new ServerSocket(port);
                 Socket socket = serverSocket.accept();

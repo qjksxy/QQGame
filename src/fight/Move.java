@@ -1,27 +1,198 @@
 package fight;
 
-import moves.Lieyand;
+import game.Hero;
+import moves.*;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
 
 public class Move {
+    public static List<Move> moveList = new LinkedList<>();
     private int moveId = 0;
+    private String name = "";
+    private int type = 0;
+    private int phyPower = 0;
+    private int magPower = 0;
+    private int consume = 0;
+    private String desc = "";
+    private int levlimit = 0;
+    private int premise = 0;
+    private int heroid = 0;
+    private int isnear = 1;
+    private int status = 0;
+
+    //需要Override
+    public String getExtraValue(String name){
+        String value = "false";
+        return value;
+    }
 
     public int getMoveId() {
         return moveId;
     }
 
+    //需要Override
     public String move(FightHero fh1, FightHero fh2, FightEnvironment fe){
-        return null;
+        int hurt = this.getHpHurt(fh1, fh2, fe);
+        fh2.nowhp -= hurt;
+        String str = Hero.getHeroName(fh2.id)+"受到了"+hurt + "点伤害";
+        return str;
     }
+
     public int getMpConsume(){
-        return 0;
+        return consume;
     }
-    public String getName(){return null;}
-    public Move getMove(String moveName){
+
+    public int getHpHurt(FightHero fh1, FightHero fh2, FightEnvironment fe){
+        int hurt = 0;
+        //[(攻击侧的LV×0.4＋2)×技巧威力×攻击侧的攻击力÷防御侧的防御力÷50＋2)×各类修正×(217～255之间)÷255
+        hurt += (fh1.level*5/2+2)*(phyPower*fh1.phyatt/fh2.phydef/20+5);
+        hurt += (fh1.level*5/2+2)*(magPower*fh1.magatt/fh2.magdef/20+5);
+        Random random = new Random();
+        hurt *= ((random.nextInt(20)+230)/250);
+        return hurt;
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    public static Move getMoveByName(String moveName){
         switch (moveName){
-            case "裂炎弹":
-                return new Lieyand();
+            case "冲拳":
+                return new Chongquan();
+            case "踢腿":
+                return new Titui();
+            case "重拳":
+                return new Zhongquan();
+            case "膝击":
+                return new Xiji();
+            case "野蛮冲撞":
+                return new Yemancz();
+            case "小旋风":
+                return new Xiaoxuanf();
+            case "大旋风":
+                return new Daxuanf();
+            case "刚力旋风":
+                return new Ganglixf();
+            case "刚力大旋风":
+                return new Ganglidxf();
             default:
                 return null;
         }
+    }
+
+    public static Move getMoveById(int id){
+        switch (id){
+            case 1:
+                return new Chongquan();
+            case 2:
+                return new Titui();
+            case 3:
+                return new Zhongquan();
+            case 4:
+                return new Xiji();
+            case 5:
+                return new Yemancz();
+            case 6:
+                return new Xiaoxuanf();
+            case 7:
+                return new Daxuanf();
+            case 8:
+                return new Ganglixf();
+            case 9:
+                return new Ganglidxf();
+            default:
+                return null;
+        }
+    }
+
+    public void setMoveId(int moveId) {
+        this.moveId = moveId;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public int getPhyPower() {
+        return phyPower;
+    }
+
+    public void setPhyPower(int phyPower) {
+        this.phyPower = phyPower;
+    }
+
+    public int getMagPower() {
+        return magPower;
+    }
+
+    public void setMagPower(int magPower) {
+        this.magPower = magPower;
+    }
+
+    public int getConsume() {
+        return consume;
+    }
+
+    public void setConsume(int consume) {
+        this.consume = consume;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public int getLevlimit() {
+        return levlimit;
+    }
+
+    public void setLevlimit(int levlimit) {
+        this.levlimit = levlimit;
+    }
+
+    public int getPremise() {
+        return premise;
+    }
+
+    public void setPremise(int premise) {
+        this.premise = premise;
+    }
+
+    public int getHeroid() {
+        return heroid;
+    }
+
+    public void setHeroid(int heroid) {
+        this.heroid = heroid;
+    }
+
+    public int getIsnear() {
+        return isnear;
+    }
+
+    public void setIsnear(int isnear) {
+        this.isnear = isnear;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }
