@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding= "UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="entity.HeroMove" table="heromove">
+        <id name="id" column="id">
+            <generator class="native"></generator>
+        </id>
+        <property name="userHeroId" column="userHeroId" not-null="true"></property>
+        <property name="moveId" column="moveId" not-null="true"></property>
+        <property name="isSelected" column="isSelected" not-null="true"></property>
+        <property name="extraInfo" column="extraInfo" not-null="true"></property>
+    </class>
+</hibernate-mapping>

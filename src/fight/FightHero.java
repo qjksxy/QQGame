@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.Random;
 
 public class FightHero {
+    public static final int AI_GET_MOVE = -1;
     public LinkedList<Move> moves;
     public LinkedList<Buff> buffs;
     public ArrayList<Integer> typesList;
@@ -49,15 +50,20 @@ public class FightHero {
         typesList.add(types%10);
     }
 
+    //随机从可用技能中产生一个技能使用, 或指定技能
     public Move getMove(int i){
-        LinkedList<Move> movesCanUse = new LinkedList<>();
-        for(Move move : moves){
-            if(move.getMpConsume() < nowmp){
-                movesCanUse.add(move);
+        if(i==AI_GET_MOVE){
+            LinkedList<Move> movesCanUse = new LinkedList<>();
+            for(Move move : moves){
+                if(move.getMpConsume() < nowmp){
+                    movesCanUse.add(move);
+                }
             }
+            Random random = new Random();
+            random.nextInt(movesCanUse.size());
+            return movesCanUse.get(random.nextInt());
+        }else{
+            return moves.get(i);
         }
-        Random random = new Random();
-        random.nextInt(movesCanUse.size());
-        return movesCanUse.get(random.nextInt());
     }
 }

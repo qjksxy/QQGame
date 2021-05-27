@@ -19,7 +19,7 @@ public class SocketThread extends Thread{
             String clientMsg = new String(b, 0, msgLen);
             String serverMsg = Core.core(clientMsg);
             if(serverMsg.equals("")){
-                serverMsg = "server：noinformation to response.";
+                serverMsg = "Server：No information to response.";
             }
             OutputStream outputStream = socket.getOutputStream();
             DataOutputStream dataOutputStream = new DataOutputStream(outputStream);

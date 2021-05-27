@@ -63,6 +63,24 @@ public class HiFun {
         session.saveOrUpdate(card);
     }
 
+    public void saveUserHero(UserHero userHero){
+        session.save(userHero);
+    }
+
+    public void updateUserHero(UserHero userHero){
+        session.saveOrUpdate(userHero);
+    }
+
+    public List<UserHero> findUserHero(String qqAcc, int heroId){
+        Criteria criteria = session.createCriteria(UserHero.class);
+        criteria.add(Restrictions.eq("userAcc", qqAcc));
+        if(heroId!=0){
+            criteria.add(Restrictions.eq("heroId", heroId));
+        }
+        List<UserHero> list = criteria.list();
+        return list;
+    }
+
     public void close(){
         tx.commit();
         session.close();

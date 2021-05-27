@@ -2,6 +2,8 @@ package game;
 
 import entity.Card;
 import entity.GameUser;
+import entity.UserHero;
+import res.Text;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import java.io.*;
@@ -40,24 +42,115 @@ public class Core {
             gu = list.get(0);
         }
         if(msgs.length == 1){
-            return "请选择操作：\n"+help();
+            return "请选择操作：\n"+Text.help;
         }else if(msgs[1].equals("签到")){
             returnMsg = sign(msgs, gu, hf, QQAccount);
         }else if(msgs[1].equals("版本")){
-            returnMsg = Test.version;
+            returnMsg = Text.version;
         }else if(msgs[1].equals("抽卡")){
-            returnMsg = draw(msgs, gu, hf);
-        }else if(msgs[1].equals("物品")) {
+            returnMsg = draw(msgs, gu);
+        }else if(msgs[1].equals("物品")){
             returnMsg = seeItems(gu);
         }else if(msgs[1].equals("帮助") || msgs[1].equals("help")){
-            returnMsg = help();
+            returnMsg = Text.help;
         }else if(msgs[1].equals("碎片")){
             returnMsg = seeCards(gu);
+        }else if(msgs[1].equals("合成")){
+            returnMsg = synthetic(gu);
+        }else if(msgs[1].equals("英雄")){
+            returnMsg = seeHeros(msgs, gu);
         }
         else {
-            returnMsg = "操作参数错误！\n请选择操作：\n签到\n抽卡 [次数]\n物品";
+            returnMsg = "操作参数错误！\n"+Text.help;
         }
         System.out.println("---"+new Date().toString()+"\nserver:\n" + returnMsg+"\n---");
+        hf.close();
+        return returnMsg;
+    }
+
+    private static String seeHeros(String[] msgs, GameUser gu){
+        String returnMsg = "";
+        HiFun hf = new HiFun();
+        if(msgs.length==2){
+            List<UserHero> userHeros = hf.findUserHero(gu.getQqAcc(), 0);
+            int i = 0;
+            for(UserHero userHero : userHeros){
+                i++;
+                returnMsg += userHero.getHeroId()+":"+Hero.getHeroName(userHero.getHeroId()) + "\n";
+                if(i%5==0){
+                    i = 0;
+                    returnMsg+="&";
+                }
+            }
+        }else{
+            for(int i=2; i< msgs.length; i++){
+                try{
+                    int heroId = Integer.parseInt(msgs[i]);
+                    UserHero userHero = hf.findUserHero(gu.getQqAcc(), heroId).get(0);
+                    returnMsg += userHero.getHeroId()+":"+Hero.getHeroName(userHero.getHeroId()) + "\n";
+                    returnMsg += "等级："+userHero.getLevel() + " 经验："+userHero.getExp() + "\n";
+                    returnMsg += "HPMP：" + userHero.getMaxhp() + "/" + userHero.getMaxmp() + "\n";
+                    returnMsg += "物攻魔攻：" + userHero.getPhyatt() + "/" + userHero.getMagatt() + "\n";
+                    returnMsg += "物抗魔抗：" + userHero.getPhydef() + "/" + userHero.getMagdef() + "\n";
+                    returnMsg += "命中闪避：" + userHero.getAcc() + "/" + userHero.getMiss() + "\n";
+                    returnMsg += "暴击速度：" + userHero.getCrit() + "/" + userHero.getSpeed() + "&";
+
+                }catch (Exception e){
+                    return e.toString();
+                }
+
+            }
+        }
+
+        return returnMsg;
+    }
+
+    private static String synthetic(GameUser gu){
+        String returnMsg = "";
+        HiFun hf = new HiFun();
+        List<Card> cards = hf.findAllCard(gu.getQqAcc());
+        int i = 0;
+        for(Card card : cards){
+            int type = card.getCardId()%10;
+            int temp;
+            if(type==1){
+                temp = 20;
+            }else if(type==2 || type==3){
+                temp = 15;
+            }else if(type==4 || type==5 || type==6){
+                temp = 10;
+            }else{
+                temp = 5;
+            }
+            if(card.getCount() >= card.getLevel()*temp+temp && card.getLevel()<5){
+                int nowCardLevel = card.getCount()/temp;
+                if(nowCardLevel>5){
+                    nowCardLevel = 5;
+                }
+                if(card.getLevel()==0){
+                    returnMsg += "\n成功获得"+nowCardLevel+"星"+Hero.getHeroName(card.getHeroId());
+                    UserHero userHero = new UserHero(Hero.findHeroByID(card.getHeroId()), nowCardLevel, gu.getQqAcc());
+                    card.setLevel(nowCardLevel);
+                    hf.updateCard(card);
+                    hf.saveUserHero(userHero);
+                }else{
+                    int priIncreate = nowCardLevel - card.getLevel();
+                    returnMsg += "\n"+Hero.getHeroName(card.getHeroId())+card.getLevel()+"星->"+nowCardLevel+"星";
+                    card.setLevel(nowCardLevel);
+                    hf.updateCard(card);
+                    UserHero userHero = hf.findUserHero(gu.getQqAcc(), card.getHeroId()).get(0);
+                    UserHero.refresh(userHero, userHero.getLevel(), priIncreate);
+                    hf.saveUserHero(userHero);
+                }
+                i++;
+                if(i==4){
+                    returnMsg+="&";
+                    i = 0;
+                }
+            }
+
+
+        }
         hf.close();
         return returnMsg;
     }
@@ -115,17 +208,8 @@ public class Core {
         return returnMsg;
     }
 
-    private static String help(){
-        String msg = "帮助\n"+
-                "版本\n"+
-                "签到\n"+
-                "物品\n"+
-                "碎片\n"+
-                "抽卡 [次数，默认为10]";
-        return msg;
-    }
-
-    private static String draw(String[] msgs, GameUser gu, HiFun hf){
+    private static String draw(String[] msgs, GameUser gu){
+        HiFun hf = new HiFun();
         String returnMsg = "";
         if(msgs.length == 2){
             if(gu.getGoldCoin() < 100){

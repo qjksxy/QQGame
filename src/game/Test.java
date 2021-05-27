@@ -17,12 +17,12 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Restrictions;
 import org.xml.sax.SAXException;
+import res.Text;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 public class Test {
     public static int status = 0;
-    public static final String version = "0.2.1 完善代码逻辑";
     public static void main(String[] args){
         try {
             Hero.readHero();
@@ -44,7 +44,7 @@ public class Test {
     }
 
     public static void acceptRequset(){
-        System.out.println("version:"+version);
+        System.out.println("version:"+ Text.version);
         int port = 7701;
         ServerSocket serverSocket = null;
 

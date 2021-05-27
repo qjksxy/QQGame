@@ -7,11 +7,9 @@ import java.util.Random;
 
 public class LuckyDraw {
     private static Random random = null;
-    private static int[] card;
     private static int[] heroPot;
     private static String[] heroName;
     static {
-        card = new int[10];
         heroPot = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         heroName = new String[10];
         for(int i=0; i<10; i++){
@@ -23,7 +21,7 @@ public class LuckyDraw {
     }
 
     public static String luckyDraw(GameUser gu, int num){
-
+        int[] card = new int[10];
         random = new Random();
         String res = "";
         for(int i=0; i<num; i++){
@@ -95,7 +93,6 @@ public class LuckyDraw {
                 HiFun hiFun = new HiFun();
                 Card card1 = hiFun.findCard(gu.getQqAcc(), heroPot[i]);
                 if(card1!=null){
-                    System.out.println(i+":"+card1.getCount()+"+"+card[i]);
                     card1.setCount(card1.getCount()+card[i]);
                     hiFun.updateCard(card1);
                     hiFun.close();

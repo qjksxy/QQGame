@@ -7,7 +7,11 @@
         <id name="id" column="id">
             <generator class="native"></generator>
         </id>
+        <property name="heroId" column="heroId" not-null="true"></property>
         <property name="types" column="types" not-null="true"></property>
+        <property name="prip" column="prip" not-null="true"></property>
+        <property name="priattdef" column="priattdef" not-null="true"></property>
+        <property name="prioth" column="prioth" not-null="true"></property>
         <property name="maxhp" column="maxhp" not-null="true"></property>
         <property name="maxmp" column="maxmp" not-null="true"></property>
         <property name="phyatt" column="phyatt" not-null="true"></property>
