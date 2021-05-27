@@ -9,6 +9,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
+import java.util.Random;
 
 public class HiFun {
     private Configuration cfg;
@@ -68,6 +69,10 @@ public class HiFun {
         session.save(userHero);
     }
 
+    public void saveHeroMove(HeroMove heroMove){
+        session.save(heroMove);
+    }
+
     public void updateUserHero(UserHero userHero){
         session.saveOrUpdate(userHero);
     }
@@ -80,6 +85,13 @@ public class HiFun {
         }
         List<UserHero> list = criteria.list();
         return list;
+    }
+
+    public UserHero findRandomUserHero(){
+        Criteria criteria = session.createCriteria(UserHero.class);
+        List<UserHero> list = criteria.list();
+        Random random = new Random();
+        return list.get(random.nextInt(list.size()));
     }
 
     public List<HeroMove> findHeroMove(int userHeroId, boolean isSelectedOnly){

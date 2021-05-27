@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Move {
-    public static List<Move> moveList = new LinkedList<>();
+    private static List<Move> moveList = new LinkedList<>();
     private int moveId = 0;
     private String name = "";
     private int type = 0;
@@ -21,7 +21,45 @@ public class Move {
     private int heroid = 0;
     private int isnear = 1;
     private int status = 0;
+    private int isSelected = 0;
 
+    public static Move getMoveInList(int index){
+        return moveList.get(index);
+    }
+
+    public Move(){}
+
+    public Move(Move move){
+        this.setIsSelected(move.getIsSelected());
+        this.setIsnear(move.getIsnear());
+        this.setHeroid(move.getHeroid());
+        this.setPremise(move.getPremise());
+        this.setLevlimit(move.getLevlimit());
+        this.setDesc(move.getDesc());
+        this.setConsume(move.getConsume());
+        this.setMagPower(move.getMagPower());
+        this.setPhyPower(move.getPhyPower());
+        this.setType(move.getType());
+        this.setName(move.getName());
+        this.setMoveId(move.getMoveId());
+        this.setStatus(move.getStatus());
+    }
+
+    public int getIsSelected() {
+        return isSelected;
+    }
+
+    public void setIsSelected(int isSelected) {
+        this.isSelected = isSelected;
+    }
+
+    public static int getMoveNum(){
+        return moveList.size();
+    }
+
+    public static void addMoveInList(Move move){
+        moveList.add(move);
+    }
     //需要Override
     public String getExtraValue(String name){
         String value = "false";
@@ -61,6 +99,31 @@ public class Move {
     public static Move getMoveByName(String moveName){
         switch (moveName){
             case "冲拳":
+                return new Chongquan(moveList.get(0));
+            case "踢腿":
+                return new Titui(moveList.get(1));
+            case "重拳":
+                return new Zhongquan(moveList.get(2));
+            case "膝击":
+                return new Xiji(moveList.get(3));
+            case "野蛮冲撞":
+                return new Yemancz(moveList.get(4));
+            case "小旋风":
+                return new Xiaoxuanf(moveList.get(5));
+            case "大旋风":
+                return new Daxuanf(moveList.get(6));
+            case "刚力旋风":
+                return new Ganglixf(moveList.get(7));
+            case "刚力大旋风":
+                return new Ganglidxf(moveList.get(8));
+            default:
+                return null;
+        }
+    }
+
+    public static Move getMoveByNameNo(String moveName){
+        switch (moveName){
+            case "冲拳":
                 return new Chongquan();
             case "踢腿":
                 return new Titui();
@@ -86,23 +149,23 @@ public class Move {
     public static Move getMoveById(int id){
         switch (id){
             case 1:
-                return new Chongquan();
+                return new Chongquan(moveList.get(id-1));
             case 2:
-                return new Titui();
+                return new Titui(moveList.get(id-1));
             case 3:
-                return new Zhongquan();
+                return new Zhongquan(moveList.get(id-1));
             case 4:
-                return new Xiji();
+                return new Xiji(moveList.get(id-1));
             case 5:
-                return new Yemancz();
+                return new Yemancz(moveList.get(id-1));
             case 6:
-                return new Xiaoxuanf();
+                return new Xiaoxuanf(moveList.get(id-1));
             case 7:
-                return new Daxuanf();
+                return new Daxuanf(moveList.get(id-1));
             case 8:
-                return new Ganglixf();
+                return new Ganglixf(moveList.get(id-1));
             case 9:
-                return new Ganglidxf();
+                return new Ganglidxf(moveList.get(id-1));
             default:
                 return null;
         }

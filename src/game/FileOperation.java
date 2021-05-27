@@ -75,7 +75,7 @@ public class FileOperation {
                 //获得节点上的属性值
                 //String empno = e.attributeValue("empno");
                 //System.out.println("属性值："+empno);
-                Move move = Move.getMoveByName(e.element("name").getText());
+                Move move = Move.getMoveByNameNo(e.element("name").getText());
                 //6、根据节点获得对应的节点
                 move.setMoveId(Integer.parseInt(e.element("id").getText()));
                 move.setName(e.element("name").getText());
@@ -88,9 +88,8 @@ public class FileOperation {
                 move.setPremise(Integer.parseInt(e.element("premise").getText()));
                 move.setHeroid(Integer.parseInt(e.element("heroid").getText()));
                 move.setIsnear(Integer.parseInt(e.element("isnear").getText()));
-                Move.moveList.add(move);
+                Move.addMoveInList(move);
             }
-
         } catch (DocumentException e) {
             e.printStackTrace();
         }

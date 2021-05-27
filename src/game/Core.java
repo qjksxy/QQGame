@@ -2,22 +2,25 @@ package game;
 
 import entity.Card;
 import entity.GameUser;
+import entity.HeroMove;
 import entity.UserHero;
+import fight.Fight;
+import fight.FightEnvironment;
+import fight.FightHero;
+import fight.Move;
 import res.Text;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Core {
+    public static Map<String, Fight> fightMap = new HashMap<>();
     public static String core(String msg){
-        if(Test.status == 1){
-            return "程序崩溃，快呼叫菜鸡学者";
+        if(Test.errorCode != 0){
+            return "程序崩溃，快呼叫菜鸡学者\nError:"+Test.errorCode;
         }
         System.out.println("---"+new Date().toString()+"\nclient:\n" + msg);
         String[] msgs = msg.split(" ");
@@ -45,7 +48,7 @@ public class Core {
             return "请选择操作：\n"+Text.help;
         }else if(msgs[1].equals("签到")){
             returnMsg = sign(msgs, gu, hf, QQAccount);
-        }else if(msgs[1].equals("版本")){
+        }else if(msgs[1].equals("版本") || msgs[1].equals("version")){
             returnMsg = Text.version;
         }else if(msgs[1].equals("抽卡")){
             returnMsg = draw(msgs, gu);
@@ -59,6 +62,8 @@ public class Core {
             returnMsg = synthetic(gu);
         }else if(msgs[1].equals("英雄")){
             returnMsg = seeHeros(msgs, gu);
+        }else if(msgs[1].equals("对战")){
+            returnMsg = fight(msgs, gu);
         }
         else {
             returnMsg = "操作参数错误！\n"+Text.help;
@@ -66,6 +71,37 @@ public class Core {
         System.out.println("---"+new Date().toString()+"\nserver:\n" + returnMsg+"\n---");
         hf.close();
         return returnMsg;
+    }
+
+    private static String fight(String[] msgs, GameUser gu){
+        String str = "";
+        if(msgs.length==2){
+            return "请选择参战英雄";
+        }else{
+            HiFun hiFun = new HiFun();
+            try{
+                str = "已为您匹配旗鼓相当的对手\n";
+                int heroId = Integer.parseInt(msgs[2]);
+                UserHero userHero1 = hiFun.findUserHero(gu.getQqAcc(), heroId).get(0);
+                System.out.println(userHero1.getId());
+                userHero1.getMove();
+                UserHero userHero2 = hiFun.findRandomUserHero();
+                System.out.println(userHero2.getId());
+                userHero2.getMove();
+                FightHero fightHero1 = new FightHero(userHero1);
+                FightHero fightHero2 = new FightHero(userHero2);
+                Fight fight = new Fight(new FightEnvironment(), fightHero1, fightHero2);
+                fightMap.put(gu.getQqAcc(), fight);
+                str+="请选择技能:技能 技能编号\n";
+                for(Move move : fightHero1.moves){
+                    str+=move.getMoveId()+":"+move.getName()+"\n";
+                }
+            }catch (Exception e){
+                return e.toString();
+            }
+
+        }
+        return str;
     }
 
     private static String seeHeros(String[] msgs, GameUser gu){
@@ -96,7 +132,7 @@ public class Core {
                     returnMsg += "暴击速度：" + userHero.getCrit() + "/" + userHero.getSpeed() + "&";
 
                 }catch (Exception e){
-                    return e.toString();
+                    return "您尚未获得该英雄";
                 }
 
             }
@@ -135,6 +171,12 @@ public class Core {
                     card.setLevel(nowCardLevel);
                     hf.updateCard(card);
                     hf.saveUserHero(userHero);
+                    HeroMove heroMove = new HeroMove();
+                    heroMove.setMoveId(1);
+                    heroMove.setUserHeroId(userHero.getId());
+                    heroMove.setIsSelected(1);
+                    heroMove.setExtraInfo("");
+                    hf.saveHeroMove(heroMove);
                 }else{
                     //已有卡升星
                     int priIncreate = nowCardLevel - card.getLevel();

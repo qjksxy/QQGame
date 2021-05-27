@@ -22,13 +22,13 @@ import res.Text;
 import javax.xml.parsers.ParserConfigurationException;
 
 public class Test {
-    public static int status = 0;
+    public static int errorCode = 0;
     public static void main(String[] args){
         try {
             Hero.readHero();
-            //FileOperation.readMove();
+            FileOperation.readMove();
         } catch (Exception e) {
-            status = 1;
+            errorCode = 1;
             System.out.println(e.toString());
             e.printStackTrace();
         }

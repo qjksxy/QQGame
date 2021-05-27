@@ -35,6 +35,25 @@ public class UserHero {
     //exp:level*10
     private int exp;
 
+    public List<Move> getMoveList() {
+        return moveList;
+    }
+
+    public List<Move> getMoveSelected(){
+        List<Move> tmoves = new LinkedList<>();
+        for(Move move : moveList){
+            System.out.println(move.getMoveId()+":"+move.getName()+"::"+move.getIsSelected());
+            if(move.getIsSelected()==1){
+                tmoves.add(move);
+            }
+        }
+        return tmoves;
+    }
+
+    public void addMoveList(Move move) {
+        this.moveList.add(move);
+    }
+
     public int getHeroId() {
         return heroId;
     }
@@ -237,20 +256,24 @@ public class UserHero {
         return userHero;
     }
 
+    //对战时首先调用该方法
     public void getMove(){
         HiFun hiFun = new HiFun();
         List<HeroMove> heroMoveList = hiFun.findHeroMove(this.id, false);
         List<Move> tmoves = new LinkedList<>();
         for(HeroMove heroMove : heroMoveList){
+            System.out.println("HeromoveID:"+heroMove.getId());
             Move move = Move.getMoveById(heroMove.getMoveId());
+            move.setIsSelected(heroMove.getIsSelected());
             tmoves.add(move);
         }
         moveList = tmoves;
     }
 
-    public static String studyMove(){
-        String str = "";
 
+    //
+    public static String studyMove(){
+        String str = "什么也没学到";
         return str;
     }
 }

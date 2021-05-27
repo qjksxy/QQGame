@@ -21,9 +21,5 @@ public class MyTest {
     public int fun(){
         return 1;
     }
-    public static void main(String[] args) {
-        MyTest t = new TestSon();
-        System.out.println(t.fun());
 
-    }
 }

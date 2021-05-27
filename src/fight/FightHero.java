@@ -50,7 +50,11 @@ public class FightHero {
             typesList.add(types/10);
         }
         typesList.add(types%10);
-
+        moves.addAll(uh.getMoveSelected());
+        System.out.println("--------------");
+        for(Move move : moves){
+            System.out.println(move.getName()+"::"+move.getMoveId());
+        }
     }
 
     //随机从可用技能中产生一个技能使用, 或指定技能

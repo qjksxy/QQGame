@@ -13,4 +13,10 @@ public class Chongquan extends Move {
         String str = Hero.getHeroName(fh2.id)+"受到了"+hurt + "点伤害";
         return str;
     }
+
+    public Chongquan(Move move){
+        super(move);
+    }
+
+    public Chongquan() {}
 }
