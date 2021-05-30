@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Random;
 
 public class HiFun {
+    public static final int ALL_HERO = 0;
+
     private Configuration cfg;
     private SessionFactory sessionFactory;
     private Session session;
@@ -28,6 +30,17 @@ public class HiFun {
         criteria.add(Restrictions.eq(pName, value));
         List<GameUser> list = criteria.list();
         return list;
+    }
+
+    public UserHero findUserHeroById(int userHeroId){
+        Criteria criteria = session.createCriteria(UserHero.class);
+        criteria.add(Restrictions.eq("id", userHeroId));
+        List<UserHero> list = criteria.list();
+        if(list.isEmpty()){
+            return null;
+        }else{
+            return list.get(0);
+        }
     }
 
     public void addUser(GameUser gu){
@@ -80,7 +93,7 @@ public class HiFun {
     public List<UserHero> findUserHero(String qqAcc, int heroId){
         Criteria criteria = session.createCriteria(UserHero.class);
         criteria.add(Restrictions.eq("userAcc", qqAcc));
-        if(heroId!=0){
+        if(heroId != ALL_HERO){
             criteria.add(Restrictions.eq("heroId", heroId));
         }
         List<UserHero> list = criteria.list();

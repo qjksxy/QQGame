@@ -12,6 +12,7 @@ public class FightHero {
     public LinkedList<Buff> buffs;
     public ArrayList<Integer> typesList;
     public int id;
+    public int heroId;
     public int types;
     public int level;
     public int maxhp;
@@ -29,6 +30,7 @@ public class FightHero {
     public String userAcc;
     public FightHero(UserHero uh){
         this.id = uh.getId();
+        this.heroId = uh.getHeroId();
         this.level = uh.getLevel();
         this.types = uh.getTypes();
         this.maxhp = uh.getMaxhp();
@@ -62,13 +64,14 @@ public class FightHero {
         if(i==AI_GET_MOVE){
             LinkedList<Move> movesCanUse = new LinkedList<>();
             for(Move move : moves){
-                if(move.getMpConsume() < nowmp){
+
+                if(move.getMpConsume() <= nowmp){
                     movesCanUse.add(move);
                 }
             }
             Random random = new Random();
-            random.nextInt(movesCanUse.size());
-            return movesCanUse.get(random.nextInt());
+            int x = random.nextInt(movesCanUse.size());
+            return movesCanUse.get(x);
         }else{
             return moves.get(i);
         }

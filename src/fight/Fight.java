@@ -1,5 +1,7 @@
 package fight;
 
+import game.Hero;
+
 import java.nio.charset.StandardCharsets;
 
 public class Fight {
@@ -82,8 +84,6 @@ public class Fight {
 
     public String fight(){
         String str = "";
-
-
         if(hero1HasSelectedMove && hero2HasSelectedMove){
             //双方选择技能完毕，回合开始
             dealBuffsBefore(fightHero1);
@@ -91,17 +91,27 @@ public class Fight {
             hero1HasSelectedMove = false;
             hero2HasSelectedMove = false;
             if(isHero1First()){
-                move1.move(fightHero1, fightHero2, fightEnvironment);
-                move2.move(fightHero2, fightHero1, fightEnvironment);
+                str += Hero.getHeroName(fightHero1.heroId)+"使用了技能"+move1.getName()+"\n";
+                str += move1.move(fightHero1, fightHero2, fightEnvironment)+"\n";
+                if(fightHero1.nowhp <= 0 || fightHero2.nowhp <= 0){
+                    return str;
+                }
+                str += Hero.getHeroName(fightHero2.heroId)+"使用了技能"+move2.getName()+"\n";
+                str += move2.move(fightHero2, fightHero1, fightEnvironment)+"\n";
             }else{
-                move2.move(fightHero2, fightHero1, fightEnvironment);
-                move1.move(fightHero1, fightHero2, fightEnvironment);
+                str += Hero.getHeroName(fightHero2.heroId)+"使用了技能"+move2.getName()+"\n";
+                str += move2.move(fightHero2, fightHero1, fightEnvironment)+"\n";
+                if(fightHero1.nowhp <= 0 || fightHero2.nowhp <= 0){
+                    return str;
+                }
+                str += Hero.getHeroName(fightHero1.heroId)+"使用了技能"+move1.getName()+"\n";
+                str += move1.move(fightHero1, fightHero2, fightEnvironment)+"\n";
             }
 
             dealBuffsAfter(fightHero1);
             dealBuffsAfter(fightHero2);
         }
-        return null;
+        return str;
     }
 
     public void setHero1Move(Move move){

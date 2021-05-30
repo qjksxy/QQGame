@@ -60,10 +60,16 @@ public class Core {
             returnMsg = seeCards(gu);
         }else if(msgs[1].equals("合成")){
             returnMsg = synthetic(gu);
-        }else if(msgs[1].equals("英雄")){
+        }else if(msgs[1].equals("角色")){
             returnMsg = seeHeros(msgs, gu);
-        }else if(msgs[1].equals("对战")){
+        }else if(msgs[1].equals("挑衅")){
             returnMsg = fight(msgs, gu);
+        }else if(msgs[1].equals("技能")){
+            returnMsg = setmove(msgs, gu);
+        }else if(msgs[1].equals("退出战斗")){
+            returnMsg = exitFight(gu);
+        }else if(msgs[1].equals("选择技能") || msgs[1].equals("技能选择")){
+            returnMsg = chooseMove(msgs, gu);
         }
         else {
             returnMsg = "操作参数错误！\n"+Text.help;
@@ -71,6 +77,171 @@ public class Core {
         System.out.println("---"+new Date().toString()+"\nserver:\n" + returnMsg+"\n---");
         hf.close();
         return returnMsg;
+    }
+
+    private static String chooseMove(String[] msgs, GameUser gu){
+        String str = "";
+        if(msgs.length == 2){
+            str = "请选择角色";
+        }else if(msgs.length == 3){
+            try{
+                int heroId = Integer.parseInt(msgs[2]);
+                HiFun hiFun = new HiFun();
+                UserHero userHero = hiFun.findUserHero(gu.getQqAcc(), heroId).get(0);
+                userHero.getMove();
+                int i = 0;
+                for(Move m : userHero.getMoveList()){
+                    str += m.getMoveId() + ":" + m.getName() + "\n" +
+                            "物理威力："+m.getPhyPower() + "  魔法威力："+m.getMagPower() +
+                            "  耗蓝："+ m.getConsume() + "\n" + m.getDesc() + "    ";
+                    if(m.getIsSelected()==1){
+                        str+="已选择\n";
+                    }else{
+                        str += "未选择\n";
+                    }
+                    i++;
+                    if(i%3 == 0){
+                        str += "#";
+                    }
+                }
+                str += "技能选择 角色序号 技能序号 [被替换技能序号]";
+            }catch (Exception e){
+                str = e.toString();
+            }
+        }else if(msgs.length == 4){
+            int heroId = Integer.parseInt(msgs[2]);
+            HiFun hiFun = new HiFun();
+            UserHero userHero = hiFun.findUserHero(gu.getQqAcc(), heroId).get(0);
+            userHero.getMove();
+            int i=0;
+            for(Move m : userHero.getMoveList()){
+                if(m.getIsSelected() == 1){
+                    i++;
+                }
+            }
+            if(i >= 4){
+                str = "角色携带技能已满，请附加被替换技能参数";
+            }else{
+                str = "失败";
+                try{
+                    int moveId = Integer.parseInt(msgs[3]);
+                    HiFun hiFun1 = new HiFun();
+                    List<HeroMove> heroMoveList = hiFun1.findHeroMove(userHero.getId(), false);
+                    for(HeroMove hm : heroMoveList){
+                        if(hm.getMoveId() == moveId){
+                            hm.setIsSelected(1);
+                            hiFun1.saveHeroMove(hm);
+                            hiFun1.close();
+                            str = "成功！";
+                            break;
+                        }
+                    }
+                }catch (Exception e){
+                    str += e.toString();
+                }
+            }
+        } else {
+            int heroId = Integer.parseInt(msgs[2]);
+            HiFun hiFun = new HiFun();
+            UserHero userHero = hiFun.findUserHero(gu.getQqAcc(), heroId).get(0);
+            userHero.getMove();
+
+            str = "失败";
+            try{
+                int moveId = Integer.parseInt(msgs[3]);
+                int moveId2 = Integer.parseInt(msgs[4]);
+                HiFun hiFun1 = new HiFun();
+                List<HeroMove> heroMoveList = hiFun1.findHeroMove(userHero.getId(), false);
+                for(HeroMove hm : heroMoveList){
+                    if(hm.getMoveId() == moveId){
+                        hm.setIsSelected(1);
+                        hiFun1.saveHeroMove(hm);
+                    }
+                    if(hm.getMoveId() == moveId2){
+                        hm.setIsSelected(0);
+                        hiFun1.saveHeroMove(hm);
+                    }
+                }
+                hiFun1.close();
+                str = "成功！";
+            }catch (Exception e){
+                str += e.toString();
+            }
+
+        }
+        return str;
+    }
+
+    private static String exitFight(GameUser gu){
+        String str = "";
+        Fight fight = fightMap.get(gu.getQqAcc());
+        if(fight==null){
+            str = "您当前不在战斗状态";
+        } else {
+            str = "成功退出！";
+            fightMap.remove(gu.getQqAcc());
+        }
+        return str;
+    }
+
+    private static String setmove(String[] msgs, GameUser gu){
+        String str = "";
+        FightHero fightHero;
+        Fight fight = fightMap.get(gu.getQqAcc());
+        if(fight==null){
+            str = "您当前不在战斗状态，无法选择技能";
+        }else{
+            fightHero = fight.fightHero1;
+            if(msgs.length == 2){
+                str = "请选择技能！\n";
+                for(Move move : fightHero.moves){
+                    str += move.getMoveId()+":"+move.getName()+"\n";
+                }
+            } else if(msgs.length == 3){
+                try{
+                    int moveId = Integer.parseInt(msgs[2]);
+                    for(Move m : fightHero.moves){
+                        if(m.getMoveId() == moveId){
+                            fight.setHero1Move(m);
+                            fight.setHero2Move(fight.fightHero2.getMove(FightHero.AI_GET_MOVE));
+                            str += "#"+fight.fight();
+                            if(fight.fightHero1.nowhp <= 0){
+                                str += "#"+Hero.getHeroName(fight.fightHero2.heroId)+"取得了胜利！\n";
+                                fightMap.remove(gu.getQqAcc());
+                            } else if(fight.fightHero2.nowhp <= 0){
+                                str += "#"+Hero.getHeroName(fight.fightHero1.heroId)+"取得了胜利！\n";
+                                HiFun hiFun = new HiFun();
+                                UserHero userHero = hiFun.findUserHeroById(fight.fightHero1.id);
+                                UserHero.refresh(userHero, userHero.getLevel()+1, 0);
+                                str += "等级提升了！\n"+userHero.studyMove();
+                                hiFun.saveUserHero(userHero);
+                                hiFun.close();
+                                fightMap.remove(gu.getQqAcc());
+                            } else {
+                                str += "#";
+                                str += Hero.getHeroName(fight.fightHero1.heroId)+"\n";
+                                str += "hp:"+fight.fightHero1.nowhp + "/" + fight.fightHero1.maxhp+"\n";
+                                str += "mp:"+fight.fightHero1.nowmp + "/" + fight.fightHero1.maxmp+"\n";
+                                str += Hero.getHeroName(fight.fightHero2.heroId)+"\n";
+                                str += "hp:"+fight.fightHero2.nowhp + "/" + fight.fightHero2.maxhp+"\n";
+                                str += "mp:"+fight.fightHero2.nowmp + "/" + fight.fightHero2.maxmp+"\n";
+                                for(Move move : fight.fightHero1.moves){
+                                    str += move.getMoveId()+":"+move.getName()+"\n";
+                                }
+                            }
+
+                        }
+                    }
+                    if(fight.move1==null){
+                        return "技能选择失败，请重新选择！";
+                    }
+                } catch (Exception e){
+                    e.printStackTrace();
+                    return "技能序号错误!\n"+ e.toString();
+                }
+            }
+        }
+        return str;
     }
 
     private static String fight(String[] msgs, GameUser gu){
@@ -83,18 +254,18 @@ public class Core {
                 str = "已为您匹配旗鼓相当的对手\n";
                 int heroId = Integer.parseInt(msgs[2]);
                 UserHero userHero1 = hiFun.findUserHero(gu.getQqAcc(), heroId).get(0);
-                System.out.println(userHero1.getId());
                 userHero1.getMove();
                 UserHero userHero2 = hiFun.findRandomUserHero();
-                System.out.println(userHero2.getId());
                 userHero2.getMove();
                 FightHero fightHero1 = new FightHero(userHero1);
                 FightHero fightHero2 = new FightHero(userHero2);
                 Fight fight = new Fight(new FightEnvironment(), fightHero1, fightHero2);
                 fightMap.put(gu.getQqAcc(), fight);
-                str+="请选择技能:技能 技能编号\n";
+                str += Hero.getHeroName(fightHero1.heroId)+"\n"+"HP/MP:"+fightHero1.nowhp+"/"+fightHero1.nowmp+"\n";
+                str += Hero.getHeroName(fightHero2.heroId)+"\n"+"HP/MP:"+fightHero2.nowhp+"/"+fightHero2.nowmp+"\n";
+                str += "请选择技能:技能 技能编号\n";
                 for(Move move : fightHero1.moves){
-                    str+=move.getMoveId()+":"+move.getName()+"\n";
+                    str += move.getMoveId()+":"+move.getName()+"\n";
                 }
             }catch (Exception e){
                 return e.toString();
@@ -112,7 +283,8 @@ public class Core {
             int i = 0;
             for(UserHero userHero : userHeros){
                 i++;
-                returnMsg += userHero.getHeroId()+":"+Hero.getHeroName(userHero.getHeroId()) + "\n";
+                returnMsg += userHero.getHeroId()+":"+Hero.getHeroName(userHero.getHeroId()) +
+                        "  level:" + userHero.getLevel() + "\n";
                 if(i%5==0){
                     i = 0;
                     returnMsg+="&";

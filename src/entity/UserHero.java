@@ -3,6 +3,7 @@ package entity;
 import fight.Move;
 import game.Hero;
 import game.HiFun;
+import res.MyRandom;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -234,6 +235,7 @@ public class UserHero {
         refresh(this, this.level, _level);
     }
 
+    //升级升星要调用
     public static UserHero refresh(UserHero userHero, int level, int priIncreate){
         //hp: ((种族值*2+基础值/4+个体值[0~5])*等级/100+等级+基础值-30)*2+50
         //mp: ((种族值*2+基础值/4+个体值[0~5])*等级/100+等级+基础值-30)*2+50
@@ -272,8 +274,56 @@ public class UserHero {
 
 
     //
-    public static String studyMove(){
+    public String studyMove(){
         String str = "什么也没学到";
+        if(MyRandom.nextInt(100) < 60){
+            return str;
+        }
+        int type1 = this.types/10;
+        int type2 = this.types%10;
+        Random random = new Random();
+        int moveNum = Move.getMoveNum();
+        this.getMove();
+        int i = 0;
+        outer:
+        while(i < 5){
+            Move move = Move.getMoveById(random.nextInt(moveNum));
+            if(move.getType()!=0  && move.getType() != type1 && move.getType() != type2){
+                continue;
+            } else {
+                boolean movePremise = false;
+                if(move.getPremise()==0){
+                    movePremise = true;
+                }
+                if(move.getLevlimit() > this.level){
+                    i++;
+                    continue;
+                }
+                for(Move m : this.moveList){
+                    if(m.getMoveId() == move.getMoveId()){
+                        i++;
+                        continue outer;
+                    }
+                    if(move.getPremise() == m.getMoveId()){
+                        movePremise = true;
+                    }
+                }
+                if(movePremise){
+                    str = "学到了新技能:"+move.getName();
+                    HeroMove heroMove = new HeroMove();
+                    heroMove.setMoveId(move.getMoveId());
+                    heroMove.setUserHeroId(this.id);
+                    heroMove.setExtraInfo("");
+                    heroMove.setIsSelected(0);
+                    HiFun hiFun = new HiFun();
+                    hiFun.saveHeroMove(heroMove);
+                    hiFun.close();
+                    break;
+                } else {
+                    i++;
+                }
+            }
+        }
         return str;
     }
 }

@@ -74,7 +74,7 @@ public class Move {
     public String move(FightHero fh1, FightHero fh2, FightEnvironment fe){
         int hurt = this.getHpHurt(fh1, fh2, fe);
         fh2.nowhp -= hurt;
-        String str = Hero.getHeroName(fh2.id)+"受到了"+hurt + "点伤害";
+        String str = Hero.getHeroName(fh2.heroId)+"受到了"+hurt + "点伤害";
         return str;
     }
 
@@ -84,11 +84,11 @@ public class Move {
 
     public int getHpHurt(FightHero fh1, FightHero fh2, FightEnvironment fe){
         int hurt = 0;
-        //[(攻击侧的LV×0.4＋2)×技巧威力×攻击侧的攻击力÷防御侧的防御力÷50＋2)×各类修正×(217～255之间)÷255
-        hurt += (fh1.level*5/2+2)*(phyPower*fh1.phyatt/fh2.phydef/20+5);
-        hurt += (fh1.level*5/2+2)*(magPower*fh1.magatt/fh2.magdef/20+5);
+        //[(攻击侧的LV×0.4＋2)×技巧威力×攻击侧的攻击力÷防御侧的防御力÷50＋2)×各类修正×(220～250之间)÷250
+        hurt += (fh1.level*2/5+2)*(phyPower*fh1.phyatt/fh2.phydef/50+2);
+        hurt += (fh1.level*2/5+2)*(magPower*fh1.magatt/fh2.magdef/50+2);
         Random random = new Random();
-        hurt *= ((random.nextInt(20)+230)/250);
+        hurt = hurt*(random.nextInt(30)+220)/250;
         return hurt;
     }
 
