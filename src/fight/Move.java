@@ -75,6 +75,10 @@ public class Move {
     public String move(FightHero fh1, FightHero fh2, FightEnvironment fe){
         String str = "";
         int acc = MyRandom.nextInt(6*fh1.acc);
+        boolean mpEnough = false;
+        if(fh1.nowmp >= this.getConsume()){
+            mpEnough = true;
+        }
         if(acc < fh2.miss && acc < fh1.acc*5){
             str = Hero.getHeroName(fh2.heroId) + "躲开了攻击";
         }else{
@@ -83,10 +87,19 @@ public class Move {
                 hurt  = hurt + hurt * fh1.crit / 100;
                 str += Hero.getHeroName(fh1.heroId) + "打出了会心一击！\n";
             }
-            fh2.nowhp -= hurt;
+            if(!mpEnough){
+                hurt = hurt * fh1.nowmp / this.getConsume();
+                str = Hero.getHeroName(fh1.heroId)+"已经没有力气了!\n" + str;
+            }
             str += Hero.getHeroName(fh2.heroId)+"受到了" + hurt + "点伤害";
+            fh2.nowhp -= hurt;
         }
-        fh1.nowmp -= this.getConsume();
+        if(mpEnough){
+            fh1.nowmp -= this.getConsume();
+        }else{
+            fh1.nowmp = 0;
+        }
+
         return str;
     }
 
@@ -138,6 +151,24 @@ public class Move {
                 return new Ganglixf(moveList.get(7));
             case "刚力大旋风":
                 return new Ganglidxf(moveList.get(8));
+            case "左正蹬":
+                return new Zuozhengd(moveList.get(9));
+            case "右鞭腿":
+                return new Youbiant(moveList.get(10));
+            case "左刺拳":
+                return new Zuociq(moveList.get(11));
+            case "武德":
+                return new Wude(moveList.get(12));
+            case "混元功法":
+                return new Hunyuangf(moveList.get(13));
+            case "有备而来":
+                return new Youbeiel(moveList.get(14));
+            case "以和为贵":
+                return new Yihewg(moveList.get(15));
+            case "耗子尾汁":
+                return new Haoziwz(moveList.get(16));
+            case "闪电五连鞭":
+                return new Shandianwlb(moveList.get(17));
             default:
                 return null;
         }
@@ -163,6 +194,24 @@ public class Move {
                 return new Ganglixf();
             case "刚力大旋风":
                 return new Ganglidxf();
+            case "左正蹬":
+                return new Zuozhengd();
+            case "右鞭腿":
+                return new Youbiant();
+            case "左刺拳":
+                return new Zuociq();
+            case "武德":
+                return new Wude();
+            case "混元功法":
+                return new Hunyuangf();
+            case "有备而来":
+                return new Youbeiel();
+            case "以和为贵":
+                return new Yihewg();
+            case "耗子尾汁":
+                return new Haoziwz();
+            case "闪电五连鞭":
+                return new Shandianwlb();
             default:
                 return null;
         }
@@ -188,6 +237,24 @@ public class Move {
                 return new Ganglixf(moveList.get(id-1));
             case 9:
                 return new Ganglidxf(moveList.get(id-1));
+            case 10:
+                return new Zuozhengd(moveList.get(id-1));
+            case 11:
+                return new Youbiant(moveList.get(id-1));
+            case 12:
+                return new Zuociq(moveList.get(id-1));
+            case 13:
+                return new Wude(moveList.get(id-1));
+            case 14:
+                return new Hunyuangf(moveList.get(id-1));
+            case 15:
+                return new Youbeiel(moveList.get(id-1));
+            case 16:
+                return new Yihewg(moveList.get(id-1));
+            case 17:
+                return new Haoziwz(moveList.get(id-1));
+            case 18:
+                return new Shandianwlb(moveList.get(id-1));
             default:
                 return null;
         }

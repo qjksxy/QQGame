@@ -47,21 +47,21 @@ public class Core {
         }
         if(msgs.length == 1){
             return "请选择操作：\n"+Text.help;
-        }else if(msgs[1].equals("签到")){
+        }else if(msgs[1].equals("签到") || msgs[1].equals("sign")){
             returnMsg = sign(msgs, gu, hf, QQAccount);
         }else if(msgs[1].equals("版本") || msgs[1].equals("version")){
             returnMsg = Text.version;
-        }else if(msgs[1].equals("抽卡")){
+        }else if(msgs[1].equals("抽卡") || msgs[1].equals("draw")){
             returnMsg = draw(msgs, gu);
-        }else if(msgs[1].equals("物品")){
+        }else if(msgs[1].equals("物品") || msgs[1].equals("sign")){
             returnMsg = seeItems(gu);
         }else if(msgs[1].equals("帮助") || msgs[1].equals("help")){
-            returnMsg = Text.help;
+            returnMsg = getHelp(msgs);
         }else if(msgs[1].equals("碎片")){
             returnMsg = seeCards(gu);
         }else if(msgs[1].equals("合成")){
             returnMsg = synthetic(gu);
-        }else if(msgs[1].equals("角色")){
+        }else if(msgs[1].equals("角色") || msgs[1].equals("hero")){
             returnMsg = seeHeros(msgs, gu);
         }else if(msgs[1].equals("挑衅")){
             returnMsg = fight(msgs, gu);
@@ -78,6 +78,14 @@ public class Core {
         System.out.println("---"+new Date().toString()+"\nserver:\n" + returnMsg+"\n---");
         hf.close();
         return returnMsg;
+    }
+
+    private static String getHelp(String[] msgs){
+        if(msgs.length == 2){
+            return Text.help;
+        }else {
+            return Text.getHelp(msgs[2]);
+        }
     }
 
     private static String chooseMove(String[] msgs, GameUser gu){

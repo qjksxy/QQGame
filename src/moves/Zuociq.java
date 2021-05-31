@@ -6,15 +6,32 @@ import fight.Move;
 import game.Hero;
 import res.MyRandom;
 
-public class Chongquan extends Move {
+public class Zuociq extends Move {
+    public Zuociq() {
+    }
+
+    public Zuociq(Move move) {
+        super(move);
+    }
+
     @Override
     public String move(FightHero fh1, FightHero fh2, FightEnvironment fe){
         String str = "";
-        int acc = MyRandom.nextInt(6*fh1.acc);
         boolean mpEnough = false;
         if(fh1.nowmp >= this.getConsume()){
             mpEnough = true;
         }
+        //马保国彩蛋
+        if(Hero.getHeroName(fh2.heroId).equals(Hero.getHeroName(12))){
+            str = "被一代宗师防出去了";
+            if(mpEnough){
+                fh1.nowmp -= this.getConsume();
+            }else{
+                fh1.nowmp = 0;
+            }
+            return str;
+        }
+        int acc = MyRandom.nextInt(6*fh1.acc);
         if(acc < fh2.miss && acc < fh1.acc*5){
             str = Hero.getHeroName(fh2.heroId) + "躲开了攻击";
         }else{
@@ -35,13 +52,6 @@ public class Chongquan extends Move {
         }else{
             fh1.nowmp = 0;
         }
-
         return str;
     }
-
-    public Chongquan(Move move){
-        super(move);
-    }
-
-    public Chongquan() {}
 }

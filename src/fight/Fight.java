@@ -22,8 +22,8 @@ public class Fight {
         String str = "";
         for(Buff buff : fightHero.buffs){
             switch (buff.name){
-                case "烧伤":
-                    str = "烧伤";
+                default:
+                    break;
             }
         }
         return str;
@@ -32,9 +32,30 @@ public class Fight {
     public String dealBuffsAfter(FightHero fightHero){
         String str = "";
         for(Buff buff : fightHero.buffs){
-            switch (buff.name){
-                case "烧伤":
-                    str = "烧伤";
+            if(buff.name.equals("武德")){
+                if(buff.wait == 1){
+                    buff.wait = 0;
+                    fightHero.phydef = fightHero.phydef * 11 / 10;
+                    fightHero.phyatt = fightHero.phyatt * 11 / 10;
+                    System.out.println("武德！");
+                }
+            }
+            else if(buff.name.equals("混元功法")){
+                System.out.println("-----混元功法！-----");
+                if(buff.wait == 1){
+                    buff.wait = 0;
+                    fightHero.magdef = fightHero.magdef * 11 / 10;
+                    fightHero.magatt = fightHero.magatt * 11 / 10;
+                    System.out.println("-----混元功法！-----");
+                }
+            }
+            else if(buff.name.equals("有备而来")){
+                if(buff.wait == 1){
+                    buff.wait = 0;
+                    fightHero.acc = fightHero.acc * 11 / 10;
+                    fightHero.miss = fightHero.miss * 11 / 10;
+                    System.out.println("有备而来！");
+                }
             }
         }
         return str;
