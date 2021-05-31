@@ -288,6 +288,9 @@ public class UserHero {
         outer:
         while(i < 5){
             Move move = Move.getMoveById(random.nextInt(moveNum));
+            if(move == null){
+                break;
+            }
             if(move.getType()!=0  && move.getType() != type1 && move.getType() != type2){
                 continue;
             } else {
