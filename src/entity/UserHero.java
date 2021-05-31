@@ -253,7 +253,7 @@ public class UserHero {
         userHero.magdef = ((hero.stumagdef*2+hero.basmagdef/4+userHero.priattdef*5)*userHero.level/100+5);
         userHero.acc = ((hero.stuacc*2+hero.basacc/4+userHero.prioth*5)*userHero.level/100+5);
         userHero.miss = ((hero.stumiss*2+hero.basmiss/4+userHero.prioth*5)*userHero.level/100+5);
-        userHero.crit = hero.stucrit+hero.bascrit;
+        userHero.crit = hero.stucrit+hero.bascrit+userHero.prioth+userHero.prip+userHero.priattdef+ userHero.level/4;
         userHero.speed = ((hero.stuspeed*2+hero.basspeed/4+userHero.prioth*5)*userHero.level/100+5);
         return userHero;
     }

@@ -2,6 +2,7 @@ package fight;
 
 import game.Hero;
 import moves.*;
+import res.MyRandom;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -72,10 +73,20 @@ public class Move {
 
     //需要Override
     public String move(FightHero fh1, FightHero fh2, FightEnvironment fe){
-        int hurt = this.getHpHurt(fh1, fh2, fe);
-        fh2.nowhp -= hurt;
-        fh1.nowmp -= this.consume;
-        String str = Hero.getHeroName(fh2.heroId)+"受到了"+hurt + "点伤害";
+        String str = "";
+        int acc = MyRandom.nextInt(6*fh1.acc);
+        if(acc < fh2.miss && acc < fh1.acc*5){
+            str = Hero.getHeroName(fh2.heroId) + "躲开了攻击";
+        }else{
+            int hurt = this.getHpHurt(fh1, fh2, fe);
+            if(MyRandom.nextInt(100) < 10){
+                hurt  = hurt + hurt * fh1.crit / 100;
+                str += Hero.getHeroName(fh1.heroId) + "打出了会心一击！\n";
+            }
+            fh2.nowhp -= hurt;
+            str += Hero.getHeroName(fh2.heroId)+"受到了" + hurt + "点伤害";
+        }
+        fh1.nowmp -= this.getConsume();
         return str;
     }
 
@@ -86,8 +97,18 @@ public class Move {
     public int getHpHurt(FightHero fh1, FightHero fh2, FightEnvironment fe){
         int hurt = 0;
         //[(攻击侧的LV×0.4＋2)×技巧威力×攻击侧的攻击力÷防御侧的防御力÷50＋2)×各类修正×(220～250之间)÷250
-        hurt += (fh1.level*2/5+2)*(phyPower*fh1.phyatt/fh2.phydef/50+2);
-        hurt += (fh1.level*2/5+2)*(magPower*fh1.magatt/fh2.magdef/50+2);
+        if(phyPower != 0){
+            hurt += (fh1.level*2/5+2)*(phyPower*fh1.phyatt/fh2.phydef/50+2);
+        }
+        else if(magPower != 0){
+            int maghurt = (fh1.level*2/5+2)*(magPower*fh1.magatt/fh2.magdef/50+2);
+            if(this.type-fh2.types == 1 || this.type-fh2.types == 4){
+                maghurt = maghurt * 12 / 10;
+            }else if(this.type-fh2.types == -1 || this.type-fh2.types == -4){
+                maghurt = maghurt * 8 /10;
+            }
+            hurt += maghurt;
+        }
         Random random = new Random();
         hurt = hurt*(random.nextInt(30)+220)/250;
         return hurt;

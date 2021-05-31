@@ -8,6 +8,7 @@ import fight.Fight;
 import fight.FightEnvironment;
 import fight.FightHero;
 import fight.Move;
+import res.MyRandom;
 import res.Text;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -212,10 +213,14 @@ public class Core {
                                 str += "#"+Hero.getHeroName(fight.fightHero1.heroId)+"取得了胜利！\n";
                                 HiFun hiFun = new HiFun();
                                 UserHero userHero = hiFun.findUserHeroById(fight.fightHero1.id);
-                                UserHero.refresh(userHero, userHero.getLevel()+1, 0);
-                                str += "等级提升了！\n"+userHero.studyMove();
-                                hiFun.saveUserHero(userHero);
-                                hiFun.close();
+                                if(userHero.getLevel() < 50){
+                                    if(MyRandom.nextInt(100) < fight.fightHero1.level*100/fight.fightHero2.level){
+                                        UserHero.refresh(userHero, userHero.getLevel()+1, 0);
+                                        str += "等级提升了！\n"+userHero.studyMove();
+                                        hiFun.saveUserHero(userHero);
+                                        hiFun.close();
+                                    }
+                                }
                                 fightMap.remove(gu.getQqAcc());
                             } else {
                                 str += "#";
@@ -296,8 +301,8 @@ public class Core {
                     int heroId = Integer.parseInt(msgs[i]);
                     UserHero userHero = hf.findUserHero(gu.getQqAcc(), heroId).get(0);
                     returnMsg += userHero.getHeroId()+":"+Hero.getHeroName(userHero.getHeroId()) + "\n";
-                    returnMsg += "等级："+userHero.getLevel() + " 经验："+userHero.getExp() + "\n";
-                    returnMsg += "HPMP：" + userHero.getMaxhp() + "/" + userHero.getMaxmp() + "\n";
+                    returnMsg += "等级："+userHero.getLevel() + "\n";
+                    returnMsg += "生命魔法：" + userHero.getMaxhp() + "/" + userHero.getMaxmp() + "\n";
                     returnMsg += "物攻魔攻：" + userHero.getPhyatt() + "/" + userHero.getMagatt() + "\n";
                     returnMsg += "物抗魔抗：" + userHero.getPhydef() + "/" + userHero.getMagdef() + "\n";
                     returnMsg += "命中闪避：" + userHero.getAcc() + "/" + userHero.getMiss() + "\n";
