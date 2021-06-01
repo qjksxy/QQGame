@@ -43,7 +43,6 @@ public class UserHero {
     public List<Move> getMoveSelected(){
         List<Move> tmoves = new LinkedList<>();
         for(Move move : moveList){
-            System.out.println(move.getMoveId()+":"+move.getName()+"::"+move.getIsSelected());
             if(move.getIsSelected()==1){
                 tmoves.add(move);
             }
@@ -264,7 +263,6 @@ public class UserHero {
         List<HeroMove> heroMoveList = hiFun.findHeroMove(this.id, false);
         List<Move> tmoves = new LinkedList<>();
         for(HeroMove heroMove : heroMoveList){
-            System.out.println("HeromoveID:"+heroMove.getId());
             Move move = Move.getMoveById(heroMove.getMoveId());
             move.setIsSelected(heroMove.getIsSelected());
             tmoves.add(move);

@@ -274,7 +274,7 @@ public class Core {
                     }
                 } catch (Exception e){
                     e.printStackTrace();
-                    return "技能序号错误!\n"+ e.toString();
+                    return e.toString();
                 }
             }
         }

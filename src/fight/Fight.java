@@ -3,6 +3,8 @@ package fight;
 import game.Hero;
 
 import java.nio.charset.StandardCharsets;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Fight {
     public FightEnvironment fightEnvironment;
@@ -30,6 +32,7 @@ public class Fight {
     }
 
     public String dealBuffsAfter(FightHero fightHero){
+        List<Buff> bufftoRemove = new LinkedList<>();
         String str = "";
         for(Buff buff : fightHero.buffs){
             if(buff.name.equals("武德")){
@@ -76,10 +79,11 @@ public class Fight {
                     else if(buff.name.equals("降低速度")){
                         fightHero.magdef = fightHero.magdef * 10 / 9;
                     }
-                    fightHero.buffs.remove(buff);
+                    bufftoRemove.add(buff);
                 }
             }
         }
+        fightHero.buffs.removeAll(bufftoRemove);
         return str;
     }
 

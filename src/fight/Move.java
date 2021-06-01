@@ -92,6 +92,7 @@ public class Move {
                 str = Hero.getHeroName(fh1.heroId)+"已经没有力气了!\n" + str;
             }
             //
+
             for(Buff buff : fh2.buffs){
                 if(buff.name.equals("护甲")){
                     int power = buff.power;
