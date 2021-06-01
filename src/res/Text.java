@@ -1,7 +1,7 @@
 package res;
 
 public class Text {
-    public static final String version = "0.4 新A上线！";
+    public static final String version = "0.4.1 测试对战";
     public static final String help = "版本(version)\n"+
             "帮助(help) [指令]\n"+
             "签到(sign)\n"+
@@ -9,12 +9,13 @@ public class Text {
             "抽卡(draw) [次数，默认为10]\n"+
             "碎片\n"+
             "合成\n"+
-            "#"+
+            "&"+
             "角色(hero) [角色序号...]\n"+
             "挑衅 出战角色序号\n"+
-            "退出战斗\n"+
+            "逃跑\n"+
             "技能 技能序号\n"+
-            "技能选择 角色序号 技能 [被替换技能]\n";
+            "技能选择 角色序号 技能 [被替换技能]\n"+
+            "状态(buff)";
     public static String getHelp(String helpKey){
         String str = "请选择正确的指令：\n"+help;
         switch (helpKey){
@@ -36,12 +37,14 @@ public class Text {
                 return "查看已有角色列表，附加角色序号时可查看该角色详细信息";
             case "挑衅":
                 return "选择一名角色，随机挑衅另一名角色，并进入对战状态";
-            case "退出战斗":
+            case "逃跑":
                 return "怂，不打了";
             case "技能":
                 return "在对战状态下选择技能";
             case "技能选择":
                 return "查看角色已掌握技能，并携带指定技能进行战斗，每名角色能携带的最大技能数量为4，超过时需要附加被替换技能";
+            case "状态": case "buff":
+                return "查看战斗中的双方状态和效果";
         }
         return str;
     }

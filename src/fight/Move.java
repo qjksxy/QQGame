@@ -91,6 +91,19 @@ public class Move {
                 hurt = hurt * fh1.nowmp / this.getConsume();
                 str = Hero.getHeroName(fh1.heroId)+"已经没有力气了!\n" + str;
             }
+            //
+            for(Buff buff : fh2.buffs){
+                if(buff.name.equals("护甲")){
+                    int power = buff.power;
+                    if(power >= hurt){
+                        buff.power -= hurt;
+                        hurt = 0;
+                    }else{
+                        hurt -= power;
+                        buff.power = 0;
+                    }
+                }
+            }
             str += Hero.getHeroName(fh2.heroId)+"受到了" + hurt + "点伤害";
             fh2.nowhp -= hurt;
         }
@@ -115,9 +128,9 @@ public class Move {
         }
         else if(magPower != 0){
             int maghurt = (fh1.level*2/5+2)*(magPower*fh1.magatt/fh2.magdef/50+2);
-            if(this.type-fh2.types == 1 || this.type-fh2.types == 4){
+            if(this.type != 0 && (this.type-fh2.types == -1 || this.type-fh2.types == 4)){
                 maghurt = maghurt * 12 / 10;
-            }else if(this.type-fh2.types == -1 || this.type-fh2.types == -4){
+            }else if(this.type != 0 && (this.type-fh2.types == 1 || this.type-fh2.types == -4)){
                 maghurt = maghurt * 8 /10;
             }
             hurt += maghurt;
@@ -169,6 +182,12 @@ public class Move {
                 return new Haoziwz(moveList.get(16));
             case "闪电五连鞭":
                 return new Shandianwlb(moveList.get(17));
+            case "大突破":
+                return new Datup(moveList.get(18));
+            case "真空波":
+                return new Zhenkongb(moveList.get(19));
+            case "大玉真空波":
+                return new Zhenkongb(moveList.get(19));
             default:
                 return null;
         }
@@ -212,6 +231,50 @@ public class Move {
                 return new Haoziwz();
             case "闪电五连鞭":
                 return new Shandianwlb();
+            case "风·大突破":
+                return new Datup();
+            case "风·真空波":
+                return new Zhenkongb();
+            case "风·大玉真空波":
+                return new Dayuzkb();
+            case "风·风切":
+                return new Fengqie();
+            case "风·风压":
+                return new Fengya();
+            case "风·压害":
+                return new Yahai();
+            case "雷·黑豹":
+                return new Heibao();
+            case "雷·雷切":
+                return new Leiqie();
+            case "雷·雷铠":
+                return new Leikai();
+            case "雷·伪暗":
+                return new Weian();
+            case "土·土流壁":
+                return new Tuliub();
+            case "土·碎石连段":
+                return new Suishild();
+            case "土·黄泉沼":
+                return new Huangquanz();
+            case "水·水龙弹":
+                return new Shuilongd();
+            case "水·水龙卷":
+                return new Shuilongj();
+            case "水·水阵壁":
+                return new Shuizhenb();
+            case "水·水冲波":
+                return new Shuichongb();
+            case "火·裂炎弹":
+                return new Lieyand();
+            case "火·火炎弹":
+                return new Huoyand();
+            case "火·火龙炎弹":
+                return new Huolongyd();
+            case "火·炎龙放歌":
+                return new Yanlongfg();
+            case "火·凤仙花爪红":
+                return new Fengxianhzh();
             default:
                 return null;
         }
@@ -255,6 +318,50 @@ public class Move {
                 return new Haoziwz(moveList.get(id-1));
             case 18:
                 return new Shandianwlb(moveList.get(id-1));
+            case 19:
+                return new Datup(moveList.get(id-1));
+            case 20:
+                return new Zhenkongb(moveList.get(id-1));
+            case 21:
+                return new Dayuzkb(moveList.get(id-1));
+            case 22:
+                return new Fengqie(moveList.get(id-1));
+            case 23:
+                return new Fengya(moveList.get(id-1));
+            case 24:
+                return new Yahai(moveList.get(id-1));
+            case 25:
+                return new Heibao(moveList.get(id-1));
+            case 26:
+                return new Leiqie(moveList.get(id-1));
+            case 27:
+                return new Leikai(moveList.get(id-1));
+            case 28:
+                return new Weian(moveList.get(id-1));
+            case 29:
+                return new Tuliub(moveList.get(id-1));
+            case 30:
+                return new Suishild(moveList.get(id-1));
+            case 31:
+                return new Huangquanz(moveList.get(id-1));
+            case 32:
+                return new Shuilongd(moveList.get(id-1));
+            case 33:
+                return new Shuilongj(moveList.get(id-1));
+            case 34:
+                return new Shuizhenb(moveList.get(id-1));
+            case 35:
+                return new Shuichongb(moveList.get(id-1));
+            case 36:
+                return new Lieyand(moveList.get(id-1));
+            case 37:
+                return new Huoyand(moveList.get(id-1));
+            case 38:
+                return new Huolongyd(moveList.get(id-1));
+            case 39:
+                return new Yanlongfg(moveList.get(id-1));
+            case 40:
+                return new Fengxianhzh(moveList.get(id-1));
             default:
                 return null;
         }

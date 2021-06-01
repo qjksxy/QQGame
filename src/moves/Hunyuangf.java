@@ -33,7 +33,8 @@ public class Hunyuangf extends Move {
                 }
             }
             if(hasThisBuff == false){
-                Buff buff = new Buff("混元功法", 1, 0, 0, 0, 0, true);
+                Buff buff = new Buff("混元功法", 1, 100, 0, 0, 0, true);
+                buff.desc = "魔法攻击与防御提高10%";
                 fh1.buffs.add(buff);
                 str += Hero.getHeroName(fh1.heroId)+"的魔法攻击和防御都提升了！";
             }else{

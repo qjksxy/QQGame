@@ -109,7 +109,7 @@ public class Hero {
     }
 
     public static String getHeroName(Hero hero){
-        String heroName = hero.grade+":"+hero.name;
+        String heroName = hero.grade+"·"+hero.name;
         if(!hero.title.equals("")){
             heroName = heroName+"["+hero.title+"]";
         }

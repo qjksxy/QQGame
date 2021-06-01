@@ -11,9 +11,4 @@ public class Lieyand extends Move {
 
     public Lieyand() {
     }
-
-    @Override
-    public String move(FightHero fh1, FightHero fh2, FightEnvironment fe){
-        return "Eror： no override.";
-    }
 }

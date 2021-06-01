@@ -2,6 +2,7 @@ package fight;
 
 public class Buff {
     public String name;
+    public String desc;
     public int wait;
     public int con;
     public int status;

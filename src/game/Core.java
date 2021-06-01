@@ -4,17 +4,11 @@ import entity.Card;
 import entity.GameUser;
 import entity.HeroMove;
 import entity.UserHero;
-import fight.Fight;
-import fight.FightEnvironment;
-import fight.FightHero;
-import fight.Move;
+import fight.*;
 import res.MyRandom;
 import res.Text;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.io.*;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.*;
 
 public class Core {
@@ -67,10 +61,12 @@ public class Core {
             returnMsg = fight(msgs, gu);
         }else if(msgs[1].equals("技能")){
             returnMsg = setmove(msgs, gu);
-        }else if(msgs[1].equals("退出战斗")){
+        }else if(msgs[1].equals("逃跑")){
             returnMsg = exitFight(gu);
         }else if(msgs[1].equals("选择技能") || msgs[1].equals("技能选择")){
             returnMsg = chooseMove(msgs, gu);
+        }else if(msgs[1].equals("状态") || msgs[1].equals("buff")){
+            returnMsg = seeBuff(gu);
         }
         else {
             returnMsg = "操作参数错误！\n"+Text.help;
@@ -78,6 +74,34 @@ public class Core {
         System.out.println("---"+new Date().toString()+"\nserver:\n" + returnMsg+"\n---");
         hf.close();
         return returnMsg;
+    }
+
+    private static String seeBuff(GameUser gu){
+        String str = "";
+        if(fightMap.containsKey(gu.getQqAcc())){
+            Fight fight = fightMap.get(gu.getQqAcc());
+            int i = 0;
+            str = Hero.getHeroName(fight.fightHero1.heroId) + ":\n";
+            for(Buff buff : fight.fightHero1.buffs){
+                str += buff.name + ":" + buff.desc + "\n";
+                i++;
+                if(i%5 == 0){
+                    str += "&";
+                }
+            }
+            i = 0;
+            str += "&"+Hero.getHeroName(fight.fightHero2.heroId) + ":\n";
+            for(Buff buff : fight.fightHero2.buffs){
+                str += buff.name + ":" + buff.desc + "\n";
+                i++;
+                if(i%5 == 0){
+                    str += "&";
+                }
+            }
+        }else{
+            str = "您不在战斗状态哦";
+        }
+        return str;
     }
 
     private static String getHelp(String[] msgs){
@@ -110,7 +134,7 @@ public class Core {
                     }
                     i++;
                     if(i%3 == 0){
-                        str += "#";
+                        str += "&";
                     }
                 }
                 str += "技能选择 角色序号 技能序号 [被替换技能序号]";
@@ -213,12 +237,12 @@ public class Core {
                         if(m.getMoveId() == moveId){
                             fight.setHero1Move(m);
                             fight.setHero2Move(fight.fightHero2.getMove(FightHero.AI_GET_MOVE));
-                            str += "#"+fight.fight();
+                            str += fight.fight();
                             if(fight.fightHero1.nowhp <= 0){
-                                str += "#"+Hero.getHeroName(fight.fightHero2.heroId)+"取得了胜利！\n";
+                                str += "&"+Hero.getHeroName(fight.fightHero2.heroId)+"取得了胜利！\n";
                                 fightMap.remove(gu.getQqAcc());
                             } else if(fight.fightHero2.nowhp <= 0){
-                                str += "#"+Hero.getHeroName(fight.fightHero1.heroId)+"取得了胜利！\n";
+                                str += "&"+Hero.getHeroName(fight.fightHero1.heroId)+"取得了胜利！\n";
                                 HiFun hiFun = new HiFun();
                                 UserHero userHero = hiFun.findUserHeroById(fight.fightHero1.id);
                                 if(userHero.getLevel() < 50){
@@ -231,7 +255,7 @@ public class Core {
                                 }
                                 fightMap.remove(gu.getQqAcc());
                             } else {
-                                str += "#";
+                                str += "&";
                                 str += Hero.getHeroName(fight.fightHero1.heroId)+"\n";
                                 str += "hp:"+fight.fightHero1.nowhp + "/" + fight.fightHero1.maxhp+"\n";
                                 str += "mp:"+fight.fightHero1.nowmp + "/" + fight.fightHero1.maxmp+"\n";
@@ -259,6 +283,9 @@ public class Core {
 
     private static String fight(String[] msgs, GameUser gu){
         String str = "";
+        if(fightMap.containsKey(gu.getQqAcc())){
+            return "您已经在战斗状态了，请先解决当前战斗或逃跑";
+        }
         if(msgs.length==2){
             return "请选择参战英雄";
         }else{
@@ -451,8 +478,8 @@ public class Core {
         }else{
             try{
                 int luckyNum = Integer.parseInt(msgs[2]);
-                if(luckyNum>30){
-                    returnMsg = "抽卡无保底，梭哈需谨慎，单次最多连续抽卡30次";
+                if(luckyNum > 50){
+                    returnMsg = "抽卡无保底，梭哈需谨慎，单次最多连续抽卡50次";
                 }else{
                     if(gu.getGoldCoin() < 10*luckyNum){
                         return "当前金币数量不足，每次抽卡需10金币，您当前剩余金币"+gu.getGoldCoin();

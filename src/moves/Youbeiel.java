@@ -33,7 +33,8 @@ public class Youbeiel extends Move {
                 }
             }
             if(hasThisBuff == false){
-                Buff buff = new Buff("有备而来", 1, 0, 0, 0, 0, true);
+                Buff buff = new Buff("有备而来", 1, 100, 0, 0, 0, true);
+                buff.desc = "命中和闪避提高10%";
                 fh1.buffs.add(buff);
                 str += Hero.getHeroName(fh1.heroId)+"的命中和闪避都提升了！";
             }else{

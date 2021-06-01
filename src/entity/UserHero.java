@@ -281,13 +281,12 @@ public class UserHero {
         }
         int type1 = this.types/10;
         int type2 = this.types%10;
-        Random random = new Random();
         int moveNum = Move.getMoveNum();
         this.getMove();
         int i = 0;
         outer:
         while(i < 5){
-            Move move = Move.getMoveById(random.nextInt(moveNum));
+            Move move = Move.getMoveById(MyRandom.nextInt(moveNum));
             if(move == null){
                 break;
             }
@@ -297,6 +296,10 @@ public class UserHero {
                 boolean movePremise = false;
                 if(move.getPremise()==0){
                     movePremise = true;
+                }
+                //
+                if(move.getHeroid() != 0 && move.getHeroid() != this.heroId){
+                    continue;
                 }
                 if(move.getLevlimit() > this.level){
                     i++;

@@ -34,27 +34,49 @@ public class Fight {
         for(Buff buff : fightHero.buffs){
             if(buff.name.equals("武德")){
                 if(buff.wait == 1){
-                    buff.wait = 0;
                     fightHero.phydef = fightHero.phydef * 11 / 10;
                     fightHero.phyatt = fightHero.phyatt * 11 / 10;
-                    System.out.println("武德！");
                 }
             }
             else if(buff.name.equals("混元功法")){
-                System.out.println("-----混元功法！-----");
                 if(buff.wait == 1){
-                    buff.wait = 0;
                     fightHero.magdef = fightHero.magdef * 11 / 10;
                     fightHero.magatt = fightHero.magatt * 11 / 10;
-                    System.out.println("-----混元功法！-----");
                 }
             }
             else if(buff.name.equals("有备而来")){
                 if(buff.wait == 1){
-                    buff.wait = 0;
                     fightHero.acc = fightHero.acc * 11 / 10;
                     fightHero.miss = fightHero.miss * 11 / 10;
-                    System.out.println("有备而来！");
+                }
+            }else if(buff.name.equals("黑豹")){
+                if(buff.wait == 1){
+                    fightHero.speed = fightHero.speed * 11 / 10;
+                }
+            } else if(buff.name.equals("雷铠")){
+                if(buff.wait == 1){
+                    fightHero.magdef = fightHero.magdef * 11 / 10;
+                }
+            }else if(buff.name.equals("降低速度")){
+                if(buff.wait == 1){
+                    fightHero.speed = fightHero.speed * 9 / 10;
+                }
+            }
+            if(buff.wait > 0){
+                buff.wait--;
+            }else {
+                buff.con--;
+                if(buff.con <= 0){
+                    if(buff.name.equals("黑豹")){
+                        fightHero.speed = fightHero.speed * 10 / 11;
+                    }
+                    else if(buff.name.equals("雷铠")){
+                        fightHero.magdef = fightHero.magdef * 10 / 11;
+                    }
+                    else if(buff.name.equals("降低速度")){
+                        fightHero.magdef = fightHero.magdef * 10 / 9;
+                    }
+                    fightHero.buffs.remove(buff);
                 }
             }
         }
