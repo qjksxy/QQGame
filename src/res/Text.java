@@ -1,7 +1,8 @@
 package res;
 
 public class Text {
-    public static final String version = "0.4.2.3 马保国[武林高手]";
+    public static final String version = "0.4.2.3 马保国[武林高手]"+
+            "\n提高了学习到新技能的概率，角色满级后仍然能学习到新技能，升级策略调整，并且角色每次升级可获得10金币奖励";
     public static final String help = "版本(version)\n"+
             "帮助(help) [指令]\n"+
             "签到(sign)\n"+

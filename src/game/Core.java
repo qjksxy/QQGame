@@ -258,10 +258,12 @@ public class Core {
                                 HiFun hiFun = new HiFun();
                                 UserHero userHero = hiFun.findUserHeroById(fight.fightHero1.id);
                                 if(userHero.getLevel() < 50){
-                                    if(MyRandom.nextInt(100) < fight.fightHero2.level*100/fight.fightHero1.level){
+                                    if(MyRandom.nextInt(100) < fight.fightHero2.level*160/fight.fightHero1.level){
                                         UserHero.refresh(userHero, userHero.getLevel()+1, 0);
-                                        str += "等级提升了！\n";
-                                        hiFun.saveUserHero(userHero);
+                                        str += "等级提升了,金币+10!\n";
+                                        gu.setGoldCoin(gu.getGoldCoin()+10);
+                                        hiFun.updateUserHero(userHero);
+                                        hiFun.updateUser(gu);
                                         hiFun.close();
                                     }
                                 }
