@@ -51,19 +51,19 @@ public class Core {
             returnMsg = seeItems(gu);
         }else if(msgs[1].equals("帮助") || msgs[1].equals("help")){
             returnMsg = getHelp(msgs);
-        }else if(msgs[1].equals("碎片")){
+        }else if(msgs[1].equals("碎片") || msgs[1].equals("chip")){
             returnMsg = seeCards(gu);
-        }else if(msgs[1].equals("合成")){
+        }else if(msgs[1].equals("合成") || msgs[1].equals("composite")){
             returnMsg = synthetic(gu);
         }else if(msgs[1].equals("角色") || msgs[1].equals("hero")){
             returnMsg = seeHeros(msgs, gu);
-        }else if(msgs[1].equals("挑衅")){
+        }else if(msgs[1].equals("挑衅") || msgs[1].equals("pve")){
             returnMsg = fight(msgs, gu);
-        }else if(msgs[1].equals("技能")){
+        }else if(msgs[1].equals("技能") || msgs[1].equals("move")){
             returnMsg = setmove(msgs, gu);
-        }else if(msgs[1].equals("逃跑")){
+        }else if(msgs[1].equals("逃跑") || msgs[1].equals("flee")){
             returnMsg = exitFight(gu);
-        }else if(msgs[1].equals("选择技能") || msgs[1].equals("技能选择")){
+        }else if(msgs[1].equals("选择技能") || msgs[1].equals("技能选择") || msgs[1].equals("chmove")){
             returnMsg = chooseMove(msgs, gu);
         }else if(msgs[1].equals("状态") || msgs[1].equals("buff")){
             returnMsg = seeBuff(gu);
@@ -124,20 +124,21 @@ public class Core {
                 userHero.getMove();
                 int i = 0;
                 for(Move m : userHero.getMoveList()){
-                    str += m.getMoveId() + ":" + m.getName() + "\n" +
-                            "物理威力："+m.getPhyPower() + "  魔法威力："+m.getMagPower() +
-                            "  耗蓝："+ m.getConsume() + "\n" + m.getDesc() + "    ";
+                    str += m.getMoveId() + "：" + m.getName();
                     if(m.getIsSelected()==1){
-                        str+="已选择\n";
+                        str += "  (已选择)\n";
                     }else{
-                        str += "未选择\n";
+                        str += "  (未选择)\n";
                     }
+                    str +=  "物理威力："+m.getPhyPower() + "  魔法威力："+m.getMagPower() +
+                            "  耗蓝："+ m.getConsume() + "\n" + m.getDesc() + "\n";
                     i++;
                     if(i%3 == 0){
                         str += "&";
                     }
                 }
                 str += "技能选择 角色序号 技能序号 [被替换技能序号]";
+                hiFun.close();
             }catch (Exception e){
                 str = e.toString();
             }
@@ -172,6 +173,7 @@ public class Core {
                 }catch (Exception e){
                     str += e.toString();
                 }
+                hiFun.close();
             }
         } else {
             int heroId = Integer.parseInt(msgs[2]);
@@ -240,19 +242,30 @@ public class Core {
                             str += fight.fight();
                             if(fight.fightHero1.nowhp <= 0){
                                 str += "&"+Hero.getHeroName(fight.fightHero2.heroId)+"取得了胜利！\n";
+                                if(fight.fightHero1.heroId == 12){
+                                    str += Text.maBaoguo[MyRandom.nextInt(Text.maBaoguo.length)] + "\n";
+                                }else if(fight.fightHero2.heroId == 12){
+                                    str += Text.maBaoguoV[MyRandom.nextInt(Text.maBaoguoV.length)] + "\n";
+                                }
                                 fightMap.remove(gu.getQqAcc());
                             } else if(fight.fightHero2.nowhp <= 0){
                                 str += "&"+Hero.getHeroName(fight.fightHero1.heroId)+"取得了胜利！\n";
+                                if(fight.fightHero2.heroId == 12){
+                                    str += Text.maBaoguo[MyRandom.nextInt(Text.maBaoguo.length)] + "\n";
+                                }else if(fight.fightHero1.heroId == 12){
+                                    str += Text.maBaoguoV[MyRandom.nextInt(Text.maBaoguoV.length)] + "\n";
+                                }
                                 HiFun hiFun = new HiFun();
                                 UserHero userHero = hiFun.findUserHeroById(fight.fightHero1.id);
                                 if(userHero.getLevel() < 50){
-                                    if(MyRandom.nextInt(100) < fight.fightHero1.level*100/fight.fightHero2.level){
+                                    if(MyRandom.nextInt(100) < fight.fightHero2.level*100/fight.fightHero1.level){
                                         UserHero.refresh(userHero, userHero.getLevel()+1, 0);
-                                        str += "等级提升了！\n"+userHero.studyMove();
+                                        str += "等级提升了！\n";
                                         hiFun.saveUserHero(userHero);
                                         hiFun.close();
                                     }
                                 }
+                                str += userHero.studyMove();
                                 fightMap.remove(gu.getQqAcc());
                             } else {
                                 str += "&";
@@ -310,6 +323,7 @@ public class Core {
             }catch (Exception e){
                 return e.toString();
             }
+            hiFun.close();
 
         }
         return str;
@@ -349,7 +363,7 @@ public class Core {
 
             }
         }
-
+        hf.close();
         return returnMsg;
     }
 
@@ -416,6 +430,7 @@ public class Core {
         String returnMsg = "";
         HiFun hf = new HiFun();
         List<Card> cards = hf.findAllCard(gu.getQqAcc());
+        hf.close();
         int i = 0;
         for(Card card : cards){
             returnMsg += "\n"+Hero.getHeroName(card.getHeroId())+"碎片数量："+card.getCount();
@@ -475,6 +490,7 @@ public class Core {
             returnMsg = LuckyDraw.luckyDraw(gu, 10);
             gu.setGoldCoin(gu.getGoldCoin() - 100);
             hf.updateUser(gu);
+            hf.close();
         }else{
             try{
                 int luckyNum = Integer.parseInt(msgs[2]);
@@ -487,6 +503,7 @@ public class Core {
                     returnMsg = LuckyDraw.luckyDraw(gu, luckyNum);
                     gu.setGoldCoin(gu.getGoldCoin() - 10*luckyNum);
                     hf.updateUser(gu);
+                    hf.close();
                 }
             }catch (Exception e){
                 returnMsg = "抽卡次数错误！\n"+msgs.length+":"+e.toString();

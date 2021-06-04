@@ -1,20 +1,20 @@
 package res;
 
 public class Text {
-    public static final String version = "0.4.1 测试对战";
+    public static final String version = "0.4.2.3 马保国[武林高手]";
     public static final String help = "版本(version)\n"+
             "帮助(help) [指令]\n"+
             "签到(sign)\n"+
             "物品(item)\n"+
             "抽卡(draw) [次数，默认为10]\n"+
-            "碎片\n"+
-            "合成\n"+
+            "碎片(chip)\n"+
+            "合成(composite)\n"+
             "&"+
             "角色(hero) [角色序号...]\n"+
-            "挑衅 出战角色序号\n"+
-            "逃跑\n"+
-            "技能 技能序号\n"+
-            "技能选择 角色序号 技能 [被替换技能]\n"+
+            "挑衅(pve) 出战角色序号\n"+
+            "逃跑(flee)\n"+
+            "技能(move) 技能序号\n"+
+            "技能选择(chmove) 角色序号 技能 [被替换技能]\n"+
             "状态(buff)";
     public static String getHelp(String helpKey){
         String str = "请选择正确的指令：\n"+help;
@@ -48,4 +48,10 @@ public class Text {
         }
         return str;
     }
+
+    public static final String[] maBaoguo = {"我说婷婷", "当时就流眼泪了", "轻点轻点", "大意了啊，没有闪", "年轻人你不讲武德，你不懂"};
+    public static final String[] maBaoguoV = {"传统功夫是讲化劲的，四两拨千斤", "武林要以和为贵，不要搞窝里斗",
+            "马家功夫没有套路，只有散手", "接，化，发～～～", "我劝这位年轻人好自为之，好好反思，以后不要再犯这样的小聪明",
+            "如果同志你没有学会接化发，就不要过高地估计自己的功夫", "我看你都不看，你都打不进来",
+            "该松的松，该紧的紧，松中有紧，紧中有松", "练好内功，丹田发力", "打怪的瞬间，磁场要通，肛门要松"};
 }

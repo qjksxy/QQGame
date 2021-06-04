@@ -274,7 +274,7 @@ public class UserHero {
     //
     public String studyMove(){
         String str = "什么也没学到";
-        if(MyRandom.nextInt(100) < 60){
+        if(MyRandom.nextInt(100) < 40){
             return str;
         }
         int type1 = this.types/10;
@@ -283,10 +283,14 @@ public class UserHero {
         this.getMove();
         int i = 0;
         outer:
-        while(i < 5){
+        while(i < 6){
             Move move = Move.getMoveById(MyRandom.nextInt(moveNum));
             if(move == null){
                 break;
+            }
+            if(move.getLevlimit() < this.getLevel()-20){
+                i++;
+                continue;
             }
             if(move.getType()!=0  && move.getType() != type1 && move.getType() != type2){
                 continue;
