@@ -82,6 +82,7 @@ public class Move {
         if(acc < fh2.miss && acc < fh1.acc*5){
             str = Hero.getHeroName(fh2.heroId) + "躲开了攻击";
         }else{
+            //int hurt = this.getHpHurt(fh1, fh2, fe);
             int hurt = this.getHpHurt(fh1, fh2, fe);
             if(MyRandom.nextInt(100) < 10){
                 hurt  = hurt + hurt * fh1.crit / 100;
@@ -143,55 +144,6 @@ public class Move {
 
     public String getName(){
         return name;
-    }
-
-    public static Move getMoveByName(String moveName){
-        switch (moveName){
-            case "冲拳":
-                return new Chongquan(moveList.get(0));
-            case "踢腿":
-                return new Titui(moveList.get(1));
-            case "重拳":
-                return new Zhongquan(moveList.get(2));
-            case "膝击":
-                return new Xiji(moveList.get(3));
-            case "野蛮冲撞":
-                return new Yemancz(moveList.get(4));
-            case "小旋风":
-                return new Xiaoxuanf(moveList.get(5));
-            case "大旋风":
-                return new Daxuanf(moveList.get(6));
-            case "刚力旋风":
-                return new Ganglixf(moveList.get(7));
-            case "刚力大旋风":
-                return new Ganglidxf(moveList.get(8));
-            case "左正蹬":
-                return new Zuozhengd(moveList.get(9));
-            case "右鞭腿":
-                return new Youbiant(moveList.get(10));
-            case "左刺拳":
-                return new Zuociq(moveList.get(11));
-            case "武德":
-                return new Wude(moveList.get(12));
-            case "混元功法":
-                return new Hunyuangf(moveList.get(13));
-            case "有备而来":
-                return new Youbeiel(moveList.get(14));
-            case "以和为贵":
-                return new Yihewg(moveList.get(15));
-            case "耗子尾汁":
-                return new Haoziwz(moveList.get(16));
-            case "闪电五连鞭":
-                return new Shandianwlb(moveList.get(17));
-            case "大突破":
-                return new Datup(moveList.get(18));
-            case "真空波":
-                return new Zhenkongb(moveList.get(19));
-            case "大玉真空波":
-                return new Zhenkongb(moveList.get(19));
-            default:
-                return null;
-        }
     }
 
     public static Move getMoveByNameNo(String moveName){
@@ -276,6 +228,10 @@ public class Move {
                 return new Yanlongfg();
             case "火·凤仙花爪红":
                 return new Fengxianhzh();
+            case "触手攻击":
+                return new Chushou();
+            case "黑雾":
+                return new Heiwu();
             default:
                 return null;
         }
@@ -363,6 +319,10 @@ public class Move {
                 return new Yanlongfg(moveList.get(id-1));
             case 40:
                 return new Fengxianhzh(moveList.get(id-1));
+            case 41:
+                return new Chushou(moveList.get(id-1));
+            case 42:
+                return new Heiwu(moveList.get(id-1));
             default:
                 return null;
         }

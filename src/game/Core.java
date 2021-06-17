@@ -55,7 +55,7 @@ public class Core {
             returnMsg = seeCards(gu);
         }else if(msgs[1].equals("合成") || msgs[1].equals("composite")){
             returnMsg = synthetic(gu);
-        }else if(msgs[1].equals("角色") || msgs[1].equals("hero")){
+        }else if(msgs[1].equals("角色") || msgs[1].equals("hero") || msgs[1].equals("英雄")){
             returnMsg = seeHeros(msgs, gu);
         }else if(msgs[1].equals("挑衅") || msgs[1].equals("pve")){
             returnMsg = fight(msgs, gu);

@@ -23,10 +23,7 @@ public class Fight {
     public String dealBuffsBefore(FightHero fightHero){
         String str = "";
         for(Buff buff : fightHero.buffs){
-            switch (buff.name){
-                default:
-                    break;
-            }
+
         }
         return str;
     }
@@ -40,19 +37,17 @@ public class Fight {
                     fightHero.phydef = fightHero.phydef * 11 / 10;
                     fightHero.phyatt = fightHero.phyatt * 11 / 10;
                 }
-            }
-            else if(buff.name.equals("混元功法")){
+            } else if(buff.name.equals("混元功法")){
                 if(buff.wait == 1){
                     fightHero.magdef = fightHero.magdef * 11 / 10;
                     fightHero.magatt = fightHero.magatt * 11 / 10;
                 }
-            }
-            else if(buff.name.equals("有备而来")){
+            } else if(buff.name.equals("有备而来")){
                 if(buff.wait == 1){
                     fightHero.acc = fightHero.acc * 11 / 10;
                     fightHero.miss = fightHero.miss * 11 / 10;
                 }
-            }else if(buff.name.equals("黑豹")){
+            } else if(buff.name.equals("黑豹")){
                 if(buff.wait == 1){
                     fightHero.speed = fightHero.speed * 11 / 10;
                 }
@@ -60,24 +55,28 @@ public class Fight {
                 if(buff.wait == 1){
                     fightHero.magdef = fightHero.magdef * 11 / 10;
                 }
-            }else if(buff.name.equals("降低速度")){
+            } else if(buff.name.equals("降低速度")){
                 if(buff.wait == 1){
                     fightHero.speed = fightHero.speed * 9 / 10;
+                }
+            } else if(buff.name.equals("黑雾")){
+                if(buff.wait == 1){
+                    fightHero.acc = fightHero.acc * 7 / 10;
                 }
             }
             if(buff.wait > 0){
                 buff.wait--;
-            }else {
+            } else {
                 buff.con--;
                 if(buff.con <= 0){
                     if(buff.name.equals("黑豹")){
                         fightHero.speed = fightHero.speed * 10 / 11;
-                    }
-                    else if(buff.name.equals("雷铠")){
+                    } else if(buff.name.equals("雷铠")){
                         fightHero.magdef = fightHero.magdef * 10 / 11;
-                    }
-                    else if(buff.name.equals("降低速度")){
+                    } else if(buff.name.equals("降低速度")){
                         fightHero.magdef = fightHero.magdef * 10 / 9;
+                    } else if(buff.name.equals("黑雾")){
+                        fightHero.magdef = fightHero.magdef * 10 / 7;
                     }
                     bufftoRemove.add(buff);
                 }
