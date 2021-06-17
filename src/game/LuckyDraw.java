@@ -2,15 +2,15 @@ package game;
 
 import entity.Card;
 import entity.GameUser;
+import res.MyRandom;
 
 import java.util.Random;
 
 public class LuckyDraw {
-    private static Random random = null;
     private static int[] heroPot;
     private static String[] heroName;
     static {
-        heroPot = new int[]{1, 12, 3, 4, 5, 6, 7, 8, 9, 10};
+        heroPot = new int[]{11, 12, 3, 4, 5, 6, 7, 8, 9, 10};
         heroName = new String[10];
         for(int i=0; i<10; i++){
             Hero hero = Hero.findHeroByID(heroPot[i]);
@@ -22,13 +22,12 @@ public class LuckyDraw {
 
     public static String luckyDraw(GameUser gu, int num){
         int[] card = new int[10];
-        random = new Random();
         String res = "";
         for(int i=0; i<num; i++){
             if(i%5==0 && i!=0){
                 res += "&";
             }
-            int rand = random.nextInt(100)+1;
+            int rand = MyRandom.nextInt(100) + 1;
             if(rand < 9){
                 card[0]++;
                 res += "\n"+heroName[0]+"碎片*1";

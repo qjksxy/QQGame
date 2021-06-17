@@ -1,6 +1,7 @@
 package fight;
 
 import entity.UserHero;
+import res.MyRandom;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -60,14 +61,15 @@ public class FightHero {
         if(i==AI_GET_MOVE){
             LinkedList<Move> movesCanUse = new LinkedList<>();
             for(Move move : moves){
-
                 if(move.getMpConsume() <= nowmp){
                     movesCanUse.add(move);
                 }
             }
-            Random random = new Random();
-            int x = random.nextInt(movesCanUse.size());
-            return movesCanUse.get(x);
+            if(movesCanUse.size() <= 0){
+                return moves.get(MyRandom.nextInt(moves.size()));
+            }else{
+                return movesCanUse.get(MyRandom.nextInt(movesCanUse.size()));
+            }
         }else{
             return moves.get(i);
         }
