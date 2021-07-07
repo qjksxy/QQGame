@@ -31,5 +31,6 @@
 		<mapping resource="entity/Items.hbm.xml" />
 		<mapping resource="entity/UserHero.hbm.xml" />
 		<mapping resource="entity/HeroMove.hbm.xml" />
+		<mapping resource="entity/UserActivity.hbm.xml" />
 	</session-factory>
 </hibernate-configuration>

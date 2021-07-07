@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding= "UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="entity.UserActivity" table="useractivity">
+        <id name="qqAcc" column="qqAcc">
+            <generator class="assigned"></generator>
+        </id>
+        <property name="act1" column="act1" not-null="true"></property>
+        <property name="act2" column="act2" not-null="true"></property>
+        <property name="act3" column="act3" not-null="true"></property>
+        <property name="actE" column="actE" not-null="true"></property>
+    </class>
+</hibernate-mapping>

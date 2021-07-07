@@ -32,6 +32,13 @@ public class HiFun {
         return list;
     }
 
+    public List<UserActivity> findUserActivity(String pName, Object value){
+        Criteria criteria = session.createCriteria(UserActivity.class);
+        criteria.add(Restrictions.eq(pName, value));
+        List<UserActivity> list = criteria.list();
+        return list;
+    }
+
     public UserHero findUserHeroById(int userHeroId){
         Criteria criteria = session.createCriteria(UserHero.class);
         criteria.add(Restrictions.eq("id", userHeroId));
@@ -45,6 +52,10 @@ public class HiFun {
 
     public void addUser(GameUser gu){
         session.save(gu);
+    }
+
+    public void addUserActivity(UserActivity ua){
+        session.save(ua);
     }
 
     public void updateUser(GameUser gu){

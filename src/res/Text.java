@@ -1,8 +1,8 @@
 package res;
 
 public class Text {
-    public static final String version = "0.4.2.5 加坦杰厄[黑暗支配者]"+
-            "\n修复了一些bug";
+    public static final String version = "0.5 Activity"+
+            "\n活动";
     public static final String help = "版本(version)\n"+
             "帮助(help) [指令]\n"+
             "签到(sign)\n"+

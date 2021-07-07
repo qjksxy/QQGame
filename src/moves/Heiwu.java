@@ -35,7 +35,7 @@ public class Heiwu extends Move {
                     return str;
                 }
             }
-            Buff buff = new Buff("黑雾", 1, 3, 0, 0, 0, true);
+            Buff buff = new Buff("黑雾", 1, 3, 0, 0, 0, false);
             buff.desc = "降低命中30%";
             fh2.buffs.add(buff);
             fh1.nowmp -= this.getConsume();
