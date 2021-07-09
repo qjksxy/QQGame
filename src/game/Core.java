@@ -11,7 +11,7 @@ import java.util.*;
 public class Core {
     public static Map<String, Fight> fightMap = new HashMap<>();
 
-    public static GameUser getGameUserByQq(String QQAccount){
+    public static GameUser getGameUserByQq(String QQAccount) {
         HiFun hf = new HiFun();
         GameUser gu;
         List<GameUser> list = hf.findUserEq("qqAcc", QQAccount);
@@ -27,7 +27,7 @@ public class Core {
         return gu;
     }
 
-    public static UserActivity getUserActivityByQq(String QQAccount){
+    public static UserActivity getUserActivityByQq(String QQAccount) {
         HiFun hf = new HiFun();
         UserActivity ua;
         List<UserActivity> userActivityList = hf.findUserActivity("qqAcc", QQAccount);
@@ -59,40 +59,75 @@ public class Core {
         HiFun hf = new HiFun();
         gu = getGameUserByQq(QQAccount);
         ua = getUserActivityByQq(QQAccount);
+        if (msgs.length > 1) {
+            returnMsg += activity(msgs, gu, ua);
+        }
         if (msgs.length == 1) {
             return "请选择操作：\n" + Text.help;
         } else if (msgs[1].equals("签到") || msgs[1].equals("sign")) {
-            returnMsg = sign(msgs, gu, hf, QQAccount);
+            returnMsg += sign(msgs, gu, hf, QQAccount);
         } else if (msgs[1].equals("版本") || msgs[1].equals("version")) {
-            returnMsg = Text.version;
+            returnMsg += Text.version;
         } else if (msgs[1].equals("抽卡") || msgs[1].equals("draw")) {
-            returnMsg = draw(msgs, gu);
-        } else if (msgs[1].equals("物品") || msgs[1].equals("sign")) {
-            returnMsg = seeItems(gu);
+            returnMsg += draw(msgs, gu);
+        } else if (msgs[1].equals("物品") || msgs[1].equals("item")) {
+            returnMsg += seeItems(gu);
         } else if (msgs[1].equals("帮助") || msgs[1].equals("help")) {
-            returnMsg = getHelp(msgs);
+            returnMsg += getHelp(msgs);
         } else if (msgs[1].equals("碎片") || msgs[1].equals("chip")) {
-            returnMsg = seeCards(gu);
+            returnMsg += seeCards(gu);
         } else if (msgs[1].equals("合成") || msgs[1].equals("composite")) {
-            returnMsg = synthetic(gu);
+            returnMsg += synthetic(gu);
         } else if (msgs[1].equals("角色") || msgs[1].equals("hero") || msgs[1].equals("英雄")) {
-            returnMsg = seeHeros(msgs, gu);
+            returnMsg += seeHeros(msgs, gu);
         } else if (msgs[1].equals("挑衅") || msgs[1].equals("pve")) {
-            returnMsg = fight(msgs, gu);
+            returnMsg += fight(msgs, gu);
         } else if (msgs[1].equals("技能") || msgs[1].equals("move")) {
-            returnMsg = setmove(msgs, gu);
+            returnMsg += setmove(msgs, gu);
         } else if (msgs[1].equals("逃跑") || msgs[1].equals("flee")) {
-            returnMsg = exitFight(gu);
+            returnMsg += exitFight(gu);
         } else if (msgs[1].equals("选择技能") || msgs[1].equals("技能选择") || msgs[1].equals("chmove")) {
-            returnMsg = chooseMove(msgs, gu);
+            returnMsg += chooseMove(msgs, gu);
         } else if (msgs[1].equals("状态") || msgs[1].equals("buff")) {
-            returnMsg = seeBuff(gu);
+            returnMsg += seeBuff(gu);
         } else {
-            returnMsg = "操作参数错误！\n" + Text.help;
+            returnMsg += "操作参数错误！\n" + Text.help;
         }
         System.out.println("---" + new Date().toString() + "\nserver:\n" + returnMsg + "\n---");
         hf.close();
         return returnMsg;
+    }
+
+    private static String activity(String[] msgs, GameUser gu, UserActivity ua) {
+        String str = "";
+        Date signDate = gu.getRecentDate();
+        Date nowDate = new Date();
+        if (signDate == null &&
+                (msgs[1].equals("签到") || msgs[1].equals("sign"))) {
+            if (nowDate.getMonth() == 6 &&
+                    nowDate.getDate() > 9 &&
+                    nowDate.getDate() < 18) {
+                str = "招募返利活动赠送50金币\n";
+                gu.setGoldCoin(gu.getGoldCoin() + 50);
+                HiFun hiFun = new HiFun();
+                hiFun.updateUser(gu);
+                hiFun.close();
+            }
+        } else if (signDate != null &&
+                (msgs[1].equals("签到") || msgs[1].equals("sign"))) {
+            if (signDate.getMonth() != 6 || signDate.getDate() <= 9 || signDate.getDate() >= 18) {
+                if (nowDate.getMonth() == 6 &&
+                        nowDate.getDate() > 9 &&
+                        nowDate.getDate() < 18) {
+                    str = "招募返利活动赠送50金币\n";
+                    gu.setGoldCoin(gu.getGoldCoin() + 50);
+                    HiFun hiFun = new HiFun();
+                    hiFun.updateUser(gu);
+                    hiFun.close();
+                }
+            }
+        }
+        return str;
     }
 
     private static String seeBuff(GameUser gu) {
@@ -469,9 +504,11 @@ public class Core {
         String returnMsg = "";
         if (gu.getRecentDate() == null) {
             gu.setRecentDate(new Date());
+            int coppercoin = MyRandom.nextInt(100) + 50;
+            gu.setCopperCoin(gu.getCopperCoin() + coppercoin);
             gu.setGoldCoin(gu.getGoldCoin() + 50);
             hf.updateUser(gu);
-            returnMsg = QQAccount + ":\n签到成功，金币+50！";
+            returnMsg = QQAccount + ":\n签到成功，获得金币50，铜币" + coppercoin;
         } else {
             Date nowDate = new Date();
             if (gu.getRecentDate().getDate() == nowDate.getDate()
@@ -479,10 +516,12 @@ public class Core {
                     && gu.getRecentDate().getDay() == nowDate.getDay()) {
                 returnMsg = QQAccount + ":\n今天已经签到了哦，请勿重复签到";
             } else {
+                int coppercoin = MyRandom.nextInt(100) + 50;
                 gu.setRecentDate(new Date());
+                gu.setCopperCoin(gu.getCopperCoin() + coppercoin);
                 gu.setGoldCoin(gu.getGoldCoin() + 50);
                 hf.updateUser(gu);
-                returnMsg = QQAccount + ":\n签到成功，金币+50！";
+                returnMsg = QQAccount + ":\n签到成功，获得金币50,铜币" + coppercoin;
             }
         }
         try {

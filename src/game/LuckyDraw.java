@@ -10,7 +10,7 @@ public class LuckyDraw {
     private static int[] heroPot;
     private static String[] heroName;
     static {
-        heroPot = new int[]{11, 12, 3, 14, 15, 16, 17, 18, 19, 20};
+        heroPot = new int[]{11, 22, 3, 14, 15, 16, 17, 18, 19, 20};
         heroName = new String[10];
         for(int i=0; i<10; i++){
             Hero hero = Hero.findHeroByID(heroPot[i]);

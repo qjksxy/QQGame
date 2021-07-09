@@ -1,8 +1,8 @@
 package res;
 
 public class Text {
-    public static final String version = "0.5 Activity"+
-            "\n活动";
+    public static final String version = "0.5.1 长哥[夏日泳装]"+
+            "\n角色上新";
     public static final String help = "版本(version)\n"+
             "帮助(help) [指令]\n"+
             "签到(sign)\n"+
