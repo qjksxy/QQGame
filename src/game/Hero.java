@@ -41,11 +41,12 @@ public class Hero {
 
     private static LinkedList<Hero> heros = new LinkedList<>();
     public static File file = new File("/home/temp/QQGame/demo.xml");
+
     public static void readHero() throws ParserConfigurationException, IOException, SAXException {
         //1、创建读取xml文件的类
         SAXReader saxReader = new SAXReader();
         //2、给定需要读取的文件xml
-        if (!file.exists()){
+        if (!file.exists()) {
             //  System.exit(0);结束程序
             System.out.println("文件不存在");
             return;//结束方法
@@ -60,7 +61,7 @@ public class Hero {
             //获得根节点下所有的emp子节点
             // List elements = rootElement.elements("emp")
             List<Element> elements = rootElement.elements();
-            for (Element e: elements) {
+            for (Element e : elements) {
                 //获得节点上的属性值
                 //String empno = e.attributeValue("empno");
                 //System.out.println("属性值："+empno);
@@ -99,24 +100,24 @@ public class Hero {
         }
     }
 
-    public static Hero findHeroByID(int id){
-        for(Hero hero : heros){
-            if(hero.id == id){
+    public static Hero findHeroByID(int id) {
+        for (Hero hero : heros) {
+            if (hero.id == id) {
                 return hero;
             }
         }
         return null;
     }
 
-    public static String getHeroName(Hero hero){
-        String heroName = hero.grade+"·"+hero.name;
-        if(!hero.title.equals("")){
-            heroName = heroName+"["+hero.title+"]";
+    public static String getHeroName(Hero hero) {
+        String heroName = hero.grade + "·" + hero.name;
+        if (!hero.title.equals("")) {
+            heroName = heroName + "[" + hero.title + "]";
         }
         return heroName;
     }
 
-    public static String getHeroName(int heroId){
+    public static String getHeroName(int heroId) {
         Hero hero = findHeroByID(heroId);
         return getHeroName(hero);
     }

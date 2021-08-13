@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Random;
 
 public class MyTest {
-    public int fun(){
+    public int fun() {
         return 1;
     }
 

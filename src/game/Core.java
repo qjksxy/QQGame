@@ -134,23 +134,13 @@ public class Core {
         String str = "";
         if (fightMap.containsKey(gu.getQqAcc())) {
             Fight fight = fightMap.get(gu.getQqAcc());
-            int i = 0;
             str = Hero.getHeroName(fight.fightHero1.heroId) + ":\n";
             for (Buff buff : fight.fightHero1.buffs) {
                 str += buff.name + ":" + buff.desc + "\n";
-                i++;
-                if (i % 5 == 0) {
-                    str += "&";
-                }
             }
-            i = 0;
             str += "&" + Hero.getHeroName(fight.fightHero2.heroId) + ":\n";
             for (Buff buff : fight.fightHero2.buffs) {
                 str += buff.name + ":" + buff.desc + "\n";
-                i++;
-                if (i % 5 == 0) {
-                    str += "&";
-                }
             }
         } else {
             str = "您不在战斗状态哦";
@@ -176,7 +166,6 @@ public class Core {
                 HiFun hiFun = new HiFun();
                 UserHero userHero = hiFun.findUserHero(gu.getQqAcc(), heroId).get(0);
                 userHero.getMove();
-                int i = 0;
                 for (Move m : userHero.getMoveList()) {
                     str += m.getMoveId() + "：" + m.getName();
                     if (m.getIsSelected() == 1) {
@@ -186,10 +175,6 @@ public class Core {
                     }
                     str += "物理威力：" + m.getPhyPower() + "  魔法威力：" + m.getMagPower() +
                             "  耗蓝：" + m.getConsume() + "\n" + m.getDesc() + "\n";
-                    i++;
-                    if (i % 3 == 0) {
-                        str += "&";
-                    }
                 }
                 str += "技能选择 角色序号 技能序号 [被替换技能序号]";
                 hiFun.close();
@@ -295,7 +280,7 @@ public class Core {
                             fight.setHero2Move(fight.fightHero2.getMove(FightHero.AI_GET_MOVE));
                             str += fight.fight();
                             if (fight.fightHero1.nowhp <= 0) {
-                                str += "&" + Hero.getHeroName(fight.fightHero2.heroId) + "取得了胜利！\n";
+                                str += Hero.getHeroName(fight.fightHero2.heroId) + "取得了胜利！\n";
                                 if (fight.fightHero1.heroId == 12) {
                                     str += Text.maBaoguo[MyRandom.nextInt(Text.maBaoguo.length)] + "\n";
                                 } else if (fight.fightHero2.heroId == 12) {
@@ -303,7 +288,7 @@ public class Core {
                                 }
                                 fightMap.remove(gu.getQqAcc());
                             } else if (fight.fightHero2.nowhp <= 0) {
-                                str += "&" + Hero.getHeroName(fight.fightHero1.heroId) + "取得了胜利！\n";
+                                str += Hero.getHeroName(fight.fightHero1.heroId) + "取得了胜利！\n";
                                 if (fight.fightHero2.heroId == 12) {
                                     str += Text.maBaoguo[MyRandom.nextInt(Text.maBaoguo.length)] + "\n";
                                 } else if (fight.fightHero1.heroId == 12) {
@@ -324,7 +309,6 @@ public class Core {
                                 str += userHero.studyMove();
                                 fightMap.remove(gu.getQqAcc());
                             } else {
-                                str += "&";
                                 str += Hero.getHeroName(fight.fightHero1.heroId) + "\n";
                                 str += "hp:" + fight.fightHero1.nowhp + "/" + fight.fightHero1.maxhp + "\n";
                                 str += "mp:" + fight.fightHero1.nowmp + "/" + fight.fightHero1.maxmp + "\n";
@@ -397,7 +381,6 @@ public class Core {
                         "  level:" + userHero.getLevel() + "\n";
                 if (i % 5 == 0) {
                     i = 0;
-                    returnMsg += "&";
                 }
             }
         } else {
@@ -428,7 +411,6 @@ public class Core {
         HiFun hf = new HiFun();
         //获取用户全部碎片
         List<Card> cards = hf.findAllCard(gu.getQqAcc());
-        int i = 0;
         for (Card card : cards) {
             int type = card.getHeroId() % 10;
             int temp;
@@ -469,11 +451,6 @@ public class Core {
                     UserHero.refresh(userHero, userHero.getLevel(), priIncreate);
                     hf.saveUserHero(userHero);
                 }
-                i++;
-                if (i == 4) {
-                    returnMsg += "&";
-                    i = 0;
-                }
             }
 
 
@@ -487,15 +464,9 @@ public class Core {
         HiFun hf = new HiFun();
         List<Card> cards = hf.findAllCard(gu.getQqAcc());
         hf.close();
-        int i = 0;
         for (Card card : cards) {
             returnMsg += "\n" + Hero.getHeroName(card.getHeroId()) + "碎片数量：" + card.getCount();
             returnMsg += "\n" + "星级：" + card.getLevel();
-            i++;
-            if (i == 4) {
-                returnMsg += "&";
-                i = 0;
-            }
         }
         return returnMsg;
     }
@@ -527,7 +498,7 @@ public class Core {
         try {
             String[] announce = FileOperation.readFile("/home/temp/QQGame/announce", 2);
             for (String ann : announce) {
-                returnMsg += "&";
+                returnMsg += "\n";
                 String[] anns = ann.split(" ");
                 for (String str : anns) {
                     returnMsg += "\n" + str;
@@ -543,22 +514,27 @@ public class Core {
     private static String draw(String[] msgs, GameUser gu) {
         HiFun hf = new HiFun();
         String returnMsg = "";
+        Calendar calendar = Calendar.getInstance();
+        boolean inActivity = calendar.get(Calendar.MONTH) <= 8 && calendar.get(Calendar.DATE) <= 20;
         if (msgs.length == 2) {
             if (gu.getGoldCoin() < 100) {
                 return "当前金币数量不足，每次抽卡需10金币，您当前剩余金币" + gu.getGoldCoin();
             }
-            returnMsg = LuckyDraw.luckyDraw(gu, 10);
+            returnMsg = LuckyDraw.luckyDraw(gu, 10 + (inActivity ? 2 : 0));
             gu.setGoldCoin(gu.getGoldCoin() - 100);
             hf.updateUser(gu);
             hf.close();
         } else {
             try {
                 int luckyNum = Integer.parseInt(msgs[2]);
-                if (luckyNum > 50) {
-                    returnMsg = "抽卡无保底，梭哈需谨慎，单次最多连续抽卡50次";
+                if (luckyNum > 40) {
+                    returnMsg = "抽卡无保底，梭哈需谨慎，单次最多连续抽卡40次";
                 } else {
                     if (gu.getGoldCoin() < 10 * luckyNum) {
-                        return "当前金币数量不足，每次抽卡需10金币，您当前剩余金币" + gu.getGoldCoin();
+                        return "金币数量不足，每次抽卡需10金币，您当前剩余金币" + gu.getGoldCoin();
+                    }
+                    if (inActivity) {
+                        luckyNum = luckyNum * 12 / 10;
                     }
                     returnMsg = LuckyDraw.luckyDraw(gu, luckyNum);
                     gu.setGoldCoin(gu.getGoldCoin() - 10 * luckyNum);

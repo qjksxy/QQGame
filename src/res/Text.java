@@ -10,7 +10,6 @@ public class Text {
             "抽卡(draw) [次数，默认为10]\n"+
             "碎片(chip)\n"+
             "合成(composite)\n"+
-            "&"+
             "角色(hero) [角色序号...]\n"+
             "挑衅(pve) 出战角色序号\n"+
             "逃跑(flee)\n"+

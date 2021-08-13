@@ -23,7 +23,8 @@ import javax.xml.parsers.ParserConfigurationException;
 
 public class Test {
     public static int errorCode = 0;
-    public static void main(String[] args){
+
+    public static void main(String[] args) {
         try {
             Hero.readHero();
             FileOperation.readMove();
@@ -36,19 +37,19 @@ public class Test {
         //MyTest();
     }
 
-    public static void acceptRequset(){
-        System.out.println("version:"+ Text.version);
+    public static void acceptRequset() {
+        System.out.println("version:" + Text.version);
         int port = 7701;
         ServerSocket serverSocket = null;
 
-        for(int i=0; i<1000; i++){
-            try{
+        for (int i = 0; i < 1000; i++) {
+            try {
                 serverSocket = new ServerSocket(port);
                 Socket socket = serverSocket.accept();
                 Thread socketThread = new SocketThread(socket);
                 socketThread.start();
                 serverSocket.close();
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

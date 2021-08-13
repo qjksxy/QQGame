@@ -25,9 +25,6 @@ public class LuckyDraw {
         int[] card = new int[10];
         String res = "";
         for (int i = 0; i < num; i++) {
-            if (i % 5 == 0 && i != 0) {
-                res += "&";
-            }
             int rand = MyRandom.nextInt(100) + 1;
             if (rand < 9) {
                 card[0]++;

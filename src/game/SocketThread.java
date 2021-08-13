@@ -3,9 +3,10 @@ package game;
 import java.io.*;
 import java.net.Socket;
 
-public class SocketThread extends Thread{
+public class SocketThread extends Thread {
     private Socket socket;
-    public SocketThread(Socket socket){
+
+    public SocketThread(Socket socket) {
         this.socket = socket;
     }
 
@@ -18,7 +19,7 @@ public class SocketThread extends Thread{
             int msgLen = dataInputStream.read(b);
             String clientMsg = new String(b, 0, msgLen);
             String serverMsg = Core.core(clientMsg);
-            if(serverMsg.equals("")){
+            if (serverMsg.equals("")) {
                 serverMsg = "Server：No information to response.";
             }
             OutputStream outputStream = socket.getOutputStream();
