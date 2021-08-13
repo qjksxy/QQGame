@@ -24,13 +24,14 @@ public class Move {
     private int status = 0;
     private int isSelected = 0;
 
-    public static Move getMoveInList(int index){
+    public static Move getMoveInList(int index) {
         return moveList.get(index);
     }
 
-    public Move(){}
+    public Move() {
+    }
 
-    public Move(Move move){
+    public Move(Move move) {
         this.setIsSelected(move.getIsSelected());
         this.setIsnear(move.getIsnear());
         this.setHeroid(move.getHeroid());
@@ -54,15 +55,16 @@ public class Move {
         this.isSelected = isSelected;
     }
 
-    public static int getMoveNum(){
+    public static int getMoveNum() {
         return moveList.size();
     }
 
-    public static void addMoveInList(Move move){
+    public static void addMoveInList(Move move) {
         moveList.add(move);
     }
+
     //需要Override
-    public String getExtraValue(String name){
+    public String getExtraValue(String name) {
         String value = "false";
         return value;
     }
@@ -72,82 +74,81 @@ public class Move {
     }
 
     //需要Override
-    public String move(FightHero fh1, FightHero fh2, FightEnvironment fe){
+    public String move(FightHero fh1, FightHero fh2, FightEnvironment fe) {
         String str = "";
-        int acc = MyRandom.nextInt(6*fh1.acc);
+        int acc = MyRandom.nextInt(6 * fh1.acc);
         boolean mpEnough = false;
-        if(fh1.nowmp >= this.getConsume()){
+        if (fh1.nowmp >= this.getConsume()) {
             mpEnough = true;
         }
-        if(acc < fh2.miss && acc < fh1.acc*5){
+        if (acc < fh2.miss && acc < fh1.acc * 5) {
             str = Hero.getHeroName(fh2.heroId) + "躲开了攻击";
-        }else{
+        } else {
             //int hurt = this.getHpHurt(fh1, fh2, fe);
             int hurt = this.getHpHurt(fh1, fh2, fe);
-            if(MyRandom.nextInt(100) < 10){
-                hurt  = hurt + hurt * fh1.crit / 100;
+            if (MyRandom.nextInt(100) < 10) {
+                hurt = hurt + hurt * fh1.crit / 100;
                 str += Hero.getHeroName(fh1.heroId) + "打出了会心一击！\n";
             }
-            if(!mpEnough){
+            if (!mpEnough) {
                 hurt = hurt * fh1.nowmp / this.getConsume();
-                str = Hero.getHeroName(fh1.heroId)+"已经没有力气了!\n" + str;
+                str = Hero.getHeroName(fh1.heroId) + "已经没有力气了!\n" + str;
             }
             //
 
-            for(Buff buff : fh2.buffs){
-                if(buff.name.equals("护甲")){
+            for (Buff buff : fh2.buffs) {
+                if (buff.name.equals("护甲")) {
                     int power = buff.power;
-                    if(power >= hurt){
+                    if (power >= hurt) {
                         buff.power -= hurt;
                         hurt = 0;
-                    }else{
+                    } else {
                         hurt -= power;
                         buff.power = 0;
                     }
                 }
             }
-            str += Hero.getHeroName(fh2.heroId)+"受到了" + hurt + "点伤害";
+            str += Hero.getHeroName(fh2.heroId) + "受到了" + hurt + "点伤害";
             fh2.nowhp -= hurt;
         }
-        if(mpEnough){
+        if (mpEnough) {
             fh1.nowmp -= this.getConsume();
-        }else{
+        } else {
             fh1.nowmp = 0;
         }
 
         return str;
     }
 
-    public int getMpConsume(){
+    public int getMpConsume() {
         return consume;
     }
 
-    public int getHpHurt(FightHero fh1, FightHero fh2, FightEnvironment fe){
+    public int getHpHurt(FightHero fh1, FightHero fh2, FightEnvironment fe) {
         int hurt = 0;
         //[(攻击侧的LV×0.4＋2)×技巧威力×攻击侧的攻击力÷防御侧的防御力÷50＋2)×各类修正×(220～250之间)÷250
-        if(phyPower != 0){
-            hurt += (fh1.level*2/5+2)*(phyPower*fh1.phyatt/fh2.phydef/50+2);
-        }
-        else if(magPower != 0){
-            int maghurt = (fh1.level*2/5+2)*(magPower*fh1.magatt/fh2.magdef/50+2);
-            if(this.type != 0 && (this.type-fh2.types == -1 || this.type-fh2.types == 4)){
+        if (phyPower != 0) {
+            hurt += (fh1.level * 2 / 5 + 2) * (phyPower * fh1.phyatt / fh2.phydef / 50 + 2);
+        } else if (magPower != 0) {
+            int maghurt = (fh1.level * 2 / 5 + 2) * (magPower * fh1.magatt / fh2.magdef / 50 + 2);
+            if (this.type != 0 && (this.type - fh2.types == -1 || this.type - fh2.types == 4)) {
                 maghurt = maghurt * 12 / 10;
-            }else if(this.type != 0 && (this.type-fh2.types == 1 || this.type-fh2.types == -4)){
-                maghurt = maghurt * 8 /10;
+            } else if (this.type != 0 && (this.type - fh2.types == 1 || this.type - fh2.types == -4)) {
+                maghurt = maghurt * 8 / 10;
             }
             hurt += maghurt;
         }
         Random random = new Random();
-        hurt = hurt*(random.nextInt(30)+220)/250;
+        hurt = hurt * (random.nextInt(30) + 220) / 250;
         return hurt;
     }
 
-    public String getName(){
+    public String getName() {
         return name;
     }
 
-    public static Move getMoveByNameNo(String moveName){
-        switch (moveName){
+    public static Move getMoveByNameNo(String moveName) {
+        switch (moveName) {
             case "冲拳":
                 return new Chongquan();
             case "踢腿":
@@ -232,97 +233,109 @@ public class Move {
                 return new Chushou();
             case "黑雾":
                 return new Heiwu();
+            case "电气球":
+                return new Dianqiq();
+            case "雷电拳":
+                return new Leidianq();
+            case "十万伏特":
+                return new Shiwanft();
             default:
                 return null;
         }
     }
 
-    public static Move getMoveById(int id){
-        switch (id){
+    public static Move getMoveById(int id) {
+        switch (id) {
             case 1:
-                return new Chongquan(moveList.get(id-1));
+                return new Chongquan(moveList.get(id - 1));
             case 2:
-                return new Titui(moveList.get(id-1));
+                return new Titui(moveList.get(id - 1));
             case 3:
-                return new Zhongquan(moveList.get(id-1));
+                return new Zhongquan(moveList.get(id - 1));
             case 4:
-                return new Xiji(moveList.get(id-1));
+                return new Xiji(moveList.get(id - 1));
             case 5:
-                return new Yemancz(moveList.get(id-1));
+                return new Yemancz(moveList.get(id - 1));
             case 6:
-                return new Xiaoxuanf(moveList.get(id-1));
+                return new Xiaoxuanf(moveList.get(id - 1));
             case 7:
-                return new Daxuanf(moveList.get(id-1));
+                return new Daxuanf(moveList.get(id - 1));
             case 8:
-                return new Ganglixf(moveList.get(id-1));
+                return new Ganglixf(moveList.get(id - 1));
             case 9:
-                return new Ganglidxf(moveList.get(id-1));
+                return new Ganglidxf(moveList.get(id - 1));
             case 10:
-                return new Zuozhengd(moveList.get(id-1));
+                return new Zuozhengd(moveList.get(id - 1));
             case 11:
-                return new Youbiant(moveList.get(id-1));
+                return new Youbiant(moveList.get(id - 1));
             case 12:
-                return new Zuociq(moveList.get(id-1));
+                return new Zuociq(moveList.get(id - 1));
             case 13:
-                return new Wude(moveList.get(id-1));
+                return new Wude(moveList.get(id - 1));
             case 14:
-                return new Hunyuangf(moveList.get(id-1));
+                return new Hunyuangf(moveList.get(id - 1));
             case 15:
-                return new Youbeiel(moveList.get(id-1));
+                return new Youbeiel(moveList.get(id - 1));
             case 16:
-                return new Yihewg(moveList.get(id-1));
+                return new Yihewg(moveList.get(id - 1));
             case 17:
-                return new Haoziwz(moveList.get(id-1));
+                return new Haoziwz(moveList.get(id - 1));
             case 18:
-                return new Shandianwlb(moveList.get(id-1));
+                return new Shandianwlb(moveList.get(id - 1));
             case 19:
-                return new Datup(moveList.get(id-1));
+                return new Datup(moveList.get(id - 1));
             case 20:
-                return new Zhenkongb(moveList.get(id-1));
+                return new Zhenkongb(moveList.get(id - 1));
             case 21:
-                return new Dayuzkb(moveList.get(id-1));
+                return new Dayuzkb(moveList.get(id - 1));
             case 22:
-                return new Fengqie(moveList.get(id-1));
+                return new Fengqie(moveList.get(id - 1));
             case 23:
-                return new Fengya(moveList.get(id-1));
+                return new Fengya(moveList.get(id - 1));
             case 24:
-                return new Yahai(moveList.get(id-1));
+                return new Yahai(moveList.get(id - 1));
             case 25:
-                return new Heibao(moveList.get(id-1));
+                return new Heibao(moveList.get(id - 1));
             case 26:
-                return new Leiqie(moveList.get(id-1));
+                return new Leiqie(moveList.get(id - 1));
             case 27:
-                return new Leikai(moveList.get(id-1));
+                return new Leikai(moveList.get(id - 1));
             case 28:
-                return new Weian(moveList.get(id-1));
+                return new Weian(moveList.get(id - 1));
             case 29:
-                return new Tuliub(moveList.get(id-1));
+                return new Tuliub(moveList.get(id - 1));
             case 30:
-                return new Suishild(moveList.get(id-1));
+                return new Suishild(moveList.get(id - 1));
             case 31:
-                return new Huangquanz(moveList.get(id-1));
+                return new Huangquanz(moveList.get(id - 1));
             case 32:
-                return new Shuilongd(moveList.get(id-1));
+                return new Shuilongd(moveList.get(id - 1));
             case 33:
-                return new Shuilongj(moveList.get(id-1));
+                return new Shuilongj(moveList.get(id - 1));
             case 34:
-                return new Shuizhenb(moveList.get(id-1));
+                return new Shuizhenb(moveList.get(id - 1));
             case 35:
-                return new Shuichongb(moveList.get(id-1));
+                return new Shuichongb(moveList.get(id - 1));
             case 36:
-                return new Lieyand(moveList.get(id-1));
+                return new Lieyand(moveList.get(id - 1));
             case 37:
-                return new Huoyand(moveList.get(id-1));
+                return new Huoyand(moveList.get(id - 1));
             case 38:
-                return new Huolongyd(moveList.get(id-1));
+                return new Huolongyd(moveList.get(id - 1));
             case 39:
-                return new Yanlongfg(moveList.get(id-1));
+                return new Yanlongfg(moveList.get(id - 1));
             case 40:
-                return new Fengxianhzh(moveList.get(id-1));
+                return new Fengxianhzh(moveList.get(id - 1));
             case 41:
-                return new Chushou(moveList.get(id-1));
+                return new Chushou(moveList.get(id - 1));
             case 42:
-                return new Heiwu(moveList.get(id-1));
+                return new Heiwu(moveList.get(id - 1));
+            case 43:
+                return new Dianqiq(moveList.get(id - 1));
+            case 44:
+                return new Leidianq(moveList.get(id - 1));
+            case 45:
+                return new Shiwanft(moveList.get(id - 1));
             default:
                 return null;
         }
